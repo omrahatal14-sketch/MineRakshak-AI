@@ -91,53 +91,62 @@ MineRakshak-AI/
 
 ---
 
-## Quick Start Guide
+## Comprehensive Project Setup Guide
 
-### Prerequisites
+Follow this step-by-step guide to set up and run MineRakshak AI locally.
 
-- **Node.js** (v18 or higher)
-- **Python** (v3.10 or higher)
-- **npm** (v9 or higher)
+### Step 1: Prerequisites
 
-### 1. Clone the Repository
+Ensure the following tools are installed on your machine:
+- **Node.js** (v18.0.0 or higher) — [Download Node.js](https://nodejs.org/)
+- **Python** (v3.10 or higher) — [Download Python](https://www.python.org/)
+- **Git** — [Download Git](https://git-scm.com/)
+
+---
+
+### Step 2: Clone the Repository
 
 ```bash
 git clone https://github.com/omrahatal14-sketch/MineRakshak-AI.git
 cd MineRakshak-AI
 ```
 
-### 2. Install Dependencies
+---
 
-```bash
-# Root orchestrator dependencies
-npm install
+### Step 3: Set Up Firebase (Cloud Backend)
 
-# Frontend dependencies
-cd frontend && npm install && cd ..
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project (e.g., `minerakshak-ai`).
+2. **Enable Authentication**:
+   - Navigate to **Authentication** > **Sign-in method**.
+   - Enable **Email/Password** authentication.
+3. **Enable Firestore Database**:
+   - Navigate to **Firestore Database** > **Create database**.
+   - Select **Start in test mode** for development.
+4. **Enable Firebase Storage**:
+   - Navigate to **Storage** > **Get started**.
+   - Create a default storage bucket for uploading hazard photos and evidence.
+5. **Register a Web App**:
+   - In Project Settings > General > Your apps > Click the **Web** (`</>`) icon.
+   - Copy your Firebase configuration credentials.
 
-# Backend dependencies
-cd backend && npm install && cd ..
+---
 
-# AI Service dependencies
-cd ai-service && pip install -r requirements.txt && cd ..
-```
+### Step 4: Configure Environment Variables
 
-### 3. Configure Environment Variables
-
-Create `.env` in the root directory (or copy from `.env.example`):
+Create a file named `.env` in the root of the project directory (use `.env.example` as a template):
 
 ```ini
-# Firebase Config
-FIREBASE_PROJECT_ID=minerakshak-ai
-VITE_FIREBASE_API_KEY=AIzaSyBZFLg73TEZUHoMloLJ_Q0FN81aqAsOwHA
-VITE_FIREBASE_AUTH_DOMAIN=minerakshak-ai.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=minerakshak-ai
-VITE_FIREBASE_STORAGE_BUCKET=minerakshak-ai.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=846866429131
-VITE_FIREBASE_APP_ID=1:846866429131:web:1e83863b25d84cf4b1574e
+# Firebase Configuration (Replace with your Firebase project values)
+FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
 VITE_API_BASE_URL=http://localhost:4000/api
 
-# Ports
+# Service Ports
 PORT=4000
 AI_SERVICE_URL=http://localhost:8000
 CORS_ORIGIN=http://localhost:5173
@@ -145,36 +154,57 @@ CORS_ORIGIN=http://localhost:5173
 
 ---
 
-## Running the Application
+### Step 5: Install Dependencies
 
-### Option A: Single Command (Recommended)
-Run all 3 services concurrently in a single terminal:
+#### 1. Root & Backend Dependencies
+```bash
+# Install root launcher dependencies
+npm install
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
+```
+
+#### 2. Frontend Dependencies
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+#### 3. Python AI Microservice Dependencies
+```bash
+cd ai-service
+pip install -r requirements.txt
+cd ..
+```
+
+---
+
+### Step 6: Start the Application
+
+#### Option A: Single Terminal Launcher (Recommended)
+Start all three microservices (Frontend, Backend, and AI Service) concurrently with a single command:
 
 ```bash
 npm run dev
 ```
 
-### Option B: 1-Click Windows Script
-- Double-click **`start.bat`** (or run `.\start.ps1` in PowerShell).
-
-### Service URLs
-
-- **Frontend Web App**: [http://localhost:5173](http://localhost:5173)
-- **Backend API**: [http://localhost:4000/health](http://localhost:4000/health)
-- **AI Service API**: [http://localhost:8000/docs](http://localhost:8000/docs)
+#### Option B: 1-Click Windows Launcher
+- On Windows Command Prompt: Double-click **`start.bat`**
+- On Windows PowerShell: Run **`.\start.ps1`**
 
 ---
 
-## Demo Accounts
+### Step 7: Access the System
 
-All demo accounts share the password: `MineRakshak@123`
+Once running, access the services in your browser:
 
-| Role | Email | Permissions |
-| :--- | :--- | :--- |
-| **Field Officer** | `inspector1@minerakshak.demo` | Conduct assigned audits, record observations, upload evidence. |
-| **Mine Official** | `official1@minerakshak.demo` | Review submissions, AI incident capture, dispatch actions. |
-| **Corporate HQ** | `corporate@minerakshak.demo` | Multi-mine risk benchmarks, compliance tracking, CSV export. |
-| **System Admin** | `admin@minerakshak.demo` | User CRUD, mine facility directory, immutable audit logs. |
+- **Frontend Web Application**: [http://localhost:5173](http://localhost:5173)
+- **Backend API Health Check**: [http://localhost:4000/health](http://localhost:4000/health)
+- **AI Service OpenAPI Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
