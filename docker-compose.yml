@@ -1,0 +1,38 @@
+version: "3.9"
+
+# Firestore is cloud-hosted (or run via the Firebase Emulator Suite for local dev —
+# see firebase/README notes), so there is no database container here: just the three
+# application services, each talking to Firebase directly.
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    env_file: .env
+    volumes:
+      - ./backend:/app
+      - ./firebase/service-account.json:/app/service-account.json:ro
+      - /app/node_modules
+    depends_on:
+      - ai-service
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./ai-service:/app
+      - ./firebase/service-account.json:/app/service-account.json:ro
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    env_file: .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend

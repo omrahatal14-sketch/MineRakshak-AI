@@ -1,0 +1,13 @@
+{
+  "name": "minerakshak-ai",
+  "version": "1.0.0",
+  "description": "MineRakshak AI - Smart Compliance & Governance Platform for Coal Mines",
+  "scripts": {
+    "dev": "npx --yes concurrently --kill-others-on-fail -n \"BACKEND,FRONTEND,AI\" -c \"cyan,green,magenta\" \"cd backend && npm run dev\" \"cd frontend && npm run dev\" \"cd ai-service && uvicorn app.main:app --reload --port 8000\"",
+    "start": "npx --yes concurrently --kill-others-on-fail -n \"BACKEND,FRONTEND,AI\" -c \"cyan,green,magenta\" \"cd backend && npm run dev\" \"cd frontend && npm run dev\" \"cd ai-service && uvicorn app.main:app --reload --port 8000\"",
+    "dev:node": "npx --yes concurrently --kill-others-on-fail -n \"BACKEND,FRONTEND\" -c \"cyan,green\" \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "keywords": ["coal-mine", "safety", "compliance", "ai", "dgms"],
+  "author": "MineRakshak AI Team",
+  "license": "ISC"
+}
