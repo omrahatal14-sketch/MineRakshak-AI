@@ -53,7 +53,7 @@ const hazardToneStyles = {
 };
 
 export default function LandingPage() {
-  const { profile, loginAsDemo } = useAuth();
+  const { profile, loginAsDemo, logout } = useAuth();
   const router = useRouter();
 
   const handleQuickLaunch = async (roleKey) => {
@@ -97,25 +97,36 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-2.5">
             {profile ? (
-              <Link
-                href={
-                  profile.role === "field_officer"
-                    ? "/field-officer"
-                    : profile.role === "mine_official"
-                    ? "/mine-official"
-                    : profile.role === "contractor"
-                    ? "/contractor"
-                    : profile.role === "worker"
-                    ? "/worker"
-                    : profile.role === "corporate"
-                    ? "/corporate"
-                    : "/admin"
-                }
-                className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
-              >
-                <span>Dashboard ({profile.role})</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={
+                    profile.role === "field_officer"
+                      ? "/field-officer"
+                      : profile.role === "mine_official"
+                      ? "/mine-official"
+                      : profile.role === "contractor"
+                      ? "/contractor"
+                      : profile.role === "worker"
+                      ? "/worker"
+                      : profile.role === "corporate"
+                      ? "/corporate"
+                      : "/admin"
+                  }
+                  className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
+                >
+                  <span>Dashboard ({profile.role})</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    router.push("/login");
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl bg-slate-200 px-4 py-2 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-300 transition"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
               <Link
                 href="/login"

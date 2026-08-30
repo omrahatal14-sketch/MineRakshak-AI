@@ -354,7 +354,7 @@ export default function WorkerDashboard() {
                     <div key={att.id} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-white text-xs">
                       <div>
                         <p className="font-bold text-ink">{att.date}</p>
-                        <p className="text-[10px] text-slate">{att.shift.split(" ")[0]}</p>
+                        <p className="text-[10px] text-slate">{(att.shift || "").split(" ")[0]}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-ink">{att.checkInTime} - {att.checkOutTime || "Active"}</p>
@@ -534,7 +534,7 @@ export default function WorkerDashboard() {
                       <div className="flex justify-between items-start mb-1">
                         <span className="text-xs font-bold text-ink">{rep.title}</span>
                         <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${rep.status === 'in-review' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                          {rep.status.replace('-', ' ')}
+                          {(rep.status || "").replace('-', ' ')}
                         </span>
                       </div>
                       <p className="text-[10px] text-slate mb-2">{new Date(rep.submittedAt).toLocaleString()}</p>
