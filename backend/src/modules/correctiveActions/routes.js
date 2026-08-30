@@ -77,6 +77,37 @@ router.put("/:id", requireAuth, async (req, res, next) => {
   }
 });
 
+// POST /api/corrective-actions/:id/resolve — Resolve action by company/contractor with proof evidence
+router.post("/:id/resolve", requireAuth, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { resolutionNotes, resolutionEvidence = [] } = req.body;
+    const updateData = {
+      status: "resolved",
+      resolutionNotes: resolutionNotes || "Hazard remediation completed on-site.",
+      resolutionEvidence,
+      resolvedByName: req.user.name,
+      resolvedBy: req.user.uid,
+      resolvedAt: new Date(),
+    };
+    await db.collection("correctiveActions").doc(id).set(updateData, { merge: true });
+
+    // Notify field inspector that action is ready for physical verification
+    await db.collection("notifications").add({
+      title: `[Ready for Verification] Action Resolved: ${id}`,
+      message: `${req.user.name} submitted resolution evidence for action ${id}. Awaiting inspector sign-off.`,
+      recipientRole: "field_officer",
+      isRead: false,
+      createdAt: new Date(),
+    });
+
+    await logAudit(req.user.uid, "resolve_corrective_action", "correctiveAction", id, null, updateData, req.user.role);
+    res.json({ success: true, message: "Action marked as resolved. Awaiting inspector verification.", id, ...updateData });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST /api/corrective-actions/:id/verify — Verify action
 router.post("/:id/verify", requireAuth, async (req, res, next) => {
   try {

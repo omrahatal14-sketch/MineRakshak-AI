@@ -80,19 +80,31 @@ router.post("/dispatch", requireAuth, async (req, res, next) => {
     };
     await db.collection("correctiveActions").doc(actId).set(action);
 
-    // 3. Create Notification
+    // 3. Create Notifications for both Inspector and Corporate/Responsible Company
     await db.collection("notifications").add({
-      title: `Critical Hazard Dispatched: ${detectedHazard}`,
-      message: `AI Vision flagged high-risk hazard. Corrective action assigned with deadline ${action.targetDate}.`,
+      title: `[Inspection Task] Hazard Dispatched: ${detectedHazard}`,
+      message: `AI Vision flagged high-risk hazard at ${mineName} (${zone}). Assigned to ${assignedToName || "Field Inspector"} for on-site audit & sign-off.`,
+      recipientRole: "field_officer",
+      recipientId: assignedTo,
       isRead: false,
       createdAt: new Date(),
     });
 
-    await logAudit(req.user.uid, "dispatch_ai_incident", "incident", violId, null, { violId, actId, detectedHazard }, req.user.role);
+    await db.collection("notifications").add({
+      title: `[Statutory Deadline: ${action.targetDate}] Rectification Assigned: ${action.responsibleCompany}`,
+      message: `AI assigned fix deadline of ${action.targetDate} for ${detectedHazard}. Corporate management / contractor must implement CAPA.`,
+      recipientRole: "corporate",
+      isRead: false,
+      createdAt: new Date(),
+    });
+
+    await logAudit(req.user.uid, "dispatch_ai_incident", "incident", violId, null, { violId, actId, detectedHazard, responsibleCompany: action.responsibleCompany, deadline: action.targetDate }, req.user.role);
 
     res.status(201).json({
       success: true,
-      message: "AI Hazard dispatched and assigned successfully.",
+      message: `AI Hazard dispatched successfully. Assigned to ${assignedToName || "Inspector"} and ${action.responsibleCompany} with deadline ${action.targetDate}.`,
+      effectiveDeadline: action.targetDate,
+      responsibleCompany: action.responsibleCompany,
       violation,
       action,
     });

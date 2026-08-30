@@ -23,6 +23,10 @@ export const correctiveActionService = {
     return api.put(`/corrective-actions/${id}`, data);
   },
 
+  resolveAction: async (id, data) => {
+    return api.post(`/corrective-actions/${id}/resolve`, data);
+  },
+
   verifyAction: async (id, data) => {
     return api.post(`/corrective-actions/${id}/verify`, data);
   },

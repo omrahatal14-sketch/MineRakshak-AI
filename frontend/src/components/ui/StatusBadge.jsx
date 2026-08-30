@@ -6,6 +6,7 @@ const STYLES = {
   pending: "bg-amber-50 text-status-pending ring-1 ring-inset ring-amber-200",
   open: "bg-slate-100 text-status-open ring-1 ring-inset ring-border",
   overdue: "bg-red-50 text-status-overdue ring-1 ring-inset ring-red-200",
+  resolved: "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-200",
   verified: "bg-primary-light text-primary ring-1 ring-inset ring-blue-200",
   closed: "bg-green-50 text-status-closed ring-1 ring-inset ring-green-200",
 };
@@ -18,6 +19,7 @@ const LABELS = {
   pending: "Pending",
   open: "Open",
   overdue: "Overdue",
+  resolved: "Resolved (Pending Verification)",
   verified: "Verified",
   closed: "Closed",
 };
@@ -60,3 +62,19 @@ export function PriorityBadge({ priority }) {
     </span>
   );
 }
+
+export function RiskBadge({ level }) {
+  const norm = (level || "low").toLowerCase();
+  const styles = {
+    low: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    medium: "bg-amber-50 text-amber-700 border-amber-200",
+    high: "bg-red-50 text-red-700 border-red-200 font-bold",
+  };
+  const style = styles[norm] || styles.low;
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] uppercase font-bold tracking-wide ${style}`}>
+      {level} Risk
+    </span>
+  );
+}
+
