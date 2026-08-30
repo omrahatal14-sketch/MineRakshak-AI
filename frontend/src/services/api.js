@@ -26,35 +26,44 @@ async function request(path, options = {}) {
     } catch {}
   }
 
-  let res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
-    },
-  });
+  try {
+    let res = await fetch(`${BASE_URL}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      },
+    });
 
-  // If token was expired (401), force refresh token once and retry
-  if (res.status === 401 && user) {
-    try {
-      token = await user.getIdToken(true);
-      res = await fetch(`${BASE_URL}${path}`, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          ...options.headers,
-        },
-      });
-    } catch {}
-  }
+    // If token was expired (401), force refresh token once and retry
+    if (res.status === 401 && user) {
+      try {
+        token = await user.getIdToken(true);
+        res = await fetch(`${BASE_URL}${path}`, {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            ...options.headers,
+          },
+        });
+      } catch {}
+    }
 
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `Request failed: ${res.status}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `Request failed: ${res.status}`);
+    }
+    return res.status === 204 ? null : res.json();
+  } catch (err) {
+    // If backend is not available on Vercel / mobile, log and return null gracefully
+    if (err.message && err.message.includes("Failed to fetch")) {
+      console.warn(`[MineRakshak API] Offline/Vercel fallback active for: ${path}`);
+      return null;
+    }
+    throw err;
   }
-  return res.status === 204 ? null : res.json();
 }
 
 export const api = {
