@@ -15,4 +15,5 @@ export const env = {
   corsOrigin: process.env.CORS_ORIGIN || "*",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "minerakshak-ai",
   firebaseServiceAccountPath: process.env.FIREBASE_SERVICE_ACCOUNT_PATH || path.resolve(__dirname, "../../../firebase/service-account.json"),
+  geminiApiKey: process.env.GEMINI_API_KEY,
 };
