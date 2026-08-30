@@ -5,10 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../src/context/AuthContext.jsx";
 import {
-  ShieldAlert, Camera, MapPin, FileText, CheckCircle2,
+  ShieldAlert, Camera, MapPin, FileText, CheckCircle2, ClipboardCheck,
   TrendingUp, Clock, Users, ArrowRight, ShieldCheck,
-  Building2, HardHat, Compass, Sparkles, LogIn
+  Building2, HardHat, Compass, Sparkles, LogIn, Flame,
+  Mountain, Waves, Wind, Truck, CircleAlert, Eye, ChevronRight, Activity
 } from "lucide-react";
+
+const criticalHazards = [
+  { title: "Gas & coal dust explosions", label: "Critical consequence", icon: Flame, tone: "red", summary: "Methane buildup and suspended coal dust can turn a local ignition into a mine-wide chain reaction.", risks: ["Firedamp accumulation", "Secondary dust explosion"], control: "Monitor methane, airflow, ignition sources, and dust suppression." },
+  { title: "Structural & tunnel collapses", label: "High consequence", icon: Mountain, tone: "amber", summary: "Weak roof strata, undersized pillars, and deep-earth stress can cause sudden ground failure.", risks: ["Roof and wall falls", "Pillar failures & rockbursts"], control: "Track strata condition, support integrity, and extraction limits." },
+  { title: "Inundation & flooding", label: "Rapid escalation", icon: Waves, tone: "blue", summary: "Unexpected water ingress can quickly block evacuation routes and overwhelm underground workings.", risks: ["Breaching flooded workings", "Aquifer breaches"], control: "Verify surveys, water barriers, pumping capacity, and escape plans." },
+  { title: "Atmospheric hazards & fires", label: "Life-critical", icon: Wind, tone: "violet", summary: "Ventilation loss, oxygen displacement, and underground fires can create invisible lethal conditions.", risks: ["Blackdamp asphyxiation", "Spontaneous combustion"], control: "Continuously measure oxygen, carbon monoxide, ventilation, and heat." },
+  { title: "Mechanical & haulage accidents", label: "Operational danger", icon: Truck, tone: "slate", summary: "Heavy equipment in confined, low-visibility spaces can derail, crush, or entrap personnel.", risks: ["Conveyor and car failures", "Equipment entrapment"], control: "Inspect guarding, braking, routes, and isolation procedures." },
+];
 
 export default function LandingPage() {
   const { profile, loginAsDemo } = useAuth();
@@ -43,6 +52,7 @@ export default function LandingPage() {
           </div>
 
           <div className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate">
+            <a href="#hazards" className="hover:text-primary transition">Critical Hazards</a>
             <a href="#features" className="hover:text-primary transition">Innovation USPs</a>
             <a href="#roles" className="hover:text-primary transition">Stakeholder Personas</a>
             <a href="#workflow" className="hover:text-primary transition">Closed-Loop Workflow</a>
@@ -95,7 +105,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="mt-4 text-xs sm:text-sm text-slate max-w-2xl mx-auto leading-relaxed">
-          Digitally integrates open-cast and underground coal mine operations, statutory DGMS safety tracking, automated multi-party dispatch with AI deadlines, explainable risk analytics, and paperless OCR intelligence.
+          Make risk visible before it becomes an incident. MineRakshak connects underground operations, DGMS safety tracking, AI-assisted alerts, corrective action workflows, and paperless compliance intelligence.
         </p>
 
         {/* Hero Actions */}
@@ -118,29 +128,56 @@ export default function LandingPage() {
         </div>
 
         {/* Live System Stat Bar */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
-          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left animate-stagger">
+          <div className="stat-card rounded-xl border border-border bg-surface p-3.5 shadow-xs">
             <span className="text-[10px] font-bold uppercase text-slate">Monitored Facilities</span>
             <p className="text-lg font-bold text-ink mt-0.5">10 Coal Mines</p>
             <p className="text-[10px] text-slate">SECL, WCL, BCCL, ECL</p>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+          <div className="stat-card rounded-xl border border-border bg-surface p-3.5 shadow-xs">
             <span className="text-[10px] font-bold uppercase text-slate">AI Hazard Vision</span>
             <p className="text-lg font-bold text-primary mt-0.5">Automatic Dispatch</p>
             <p className="text-[10px] text-slate">Inspector & Contractor alerts</p>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+          <div className="stat-card rounded-xl border border-border bg-surface p-3.5 shadow-xs">
             <span className="text-[10px] font-bold uppercase text-slate">CAPA Workflow</span>
             <p className="text-lg font-bold text-emerald-600 mt-0.5">Closed-Loop</p>
             <p className="text-[10px] text-slate">5-stage statutory closure</p>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+          <div className="stat-card rounded-xl border border-border bg-surface p-3.5 shadow-xs">
             <span className="text-[10px] font-bold uppercase text-slate">Audit Trail</span>
             <p className="text-lg font-bold text-ink mt-0.5">Tamper-Evident</p>
             <p className="text-[10px] text-slate">Immutable timestamped logs</p>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="hazards" className="relative overflow-hidden border-y border-slate-200 bg-slate-950 px-4 py-16 text-white sm:px-6">
+        <div className="hazard-glow absolute inset-0 pointer-events-none" />
+        <div className="relative mx-auto max-w-6xl">
+          <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-sky-200"><Activity className="h-3.5 w-3.5" /> Critical incident intelligence</div>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Recognize the incidents that demand the fastest response.</h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-300">Use these risk profiles to focus inspections, telemetry, and corrective actions on the conditions that can escalate without warning.</p>
+            </div>
+            <Link href="/login" className="group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-sky-200 transition hover:text-white">Open safety workspace <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" /></Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 animate-stagger">
+            {criticalHazards.map(({ title, label, icon: Icon, tone, summary, risks, control }) => (
+              <article key={title} className={`hazard-card hazard-${tone} group rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm`}>
+                <div className="flex items-start justify-between gap-3"><div className={`hazard-icon hazard-icon-${tone} flex h-11 w-11 items-center justify-center rounded-xl`}><Icon className="h-5 w-5" strokeWidth={2} /></div><span className="rounded-full border border-white/10 bg-black/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-300">{label}</span></div>
+                <h3 className="mt-5 text-base font-bold text-white">{title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-slate-300">{summary}</p>
+                <div className="mt-4 space-y-2 border-t border-white/10 pt-4">{risks.map((risk) => <div key={risk} className="flex items-center gap-2 text-xs font-medium text-slate-200"><CircleAlert className="h-3.5 w-3.5 shrink-0 text-slate-400" />{risk}</div>)}</div>
+                <div className="mt-4 flex gap-2 rounded-lg bg-black/15 p-2.5 text-[11px] leading-relaxed text-sky-100"><Eye className="mt-0.5 h-3.5 w-3.5 shrink-0" /><span>{control}</span></div>
+              </article>
+            ))}
+            <Link href="/map" className="hazard-card group flex min-h-[280px] flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.03] p-5 transition hover:border-sky-300 hover:bg-white/[0.08]"><div><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-400/10 text-sky-200"><MapPin className="h-5 w-5" /></div><h3 className="mt-5 text-base font-bold">Map hazards to the workface</h3><p className="mt-2 text-xs leading-relaxed text-slate-300">Pair field observations with location, inspection history, and live risk context in the GIS workspace.</p></div><span className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-200">View GIS mine map <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></Link>
           </div>
         </div>
       </section>
@@ -162,8 +199,8 @@ export default function LandingPage() {
             {/* Persona 1: Mine Official */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-purple-300 hover:shadow-md transition group">
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-700 font-bold mb-3">
-                  MO
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-700 mb-3">
+                  <HardHat className="h-5 w-5" />
                 </div>
                 <h3 className="font-bold text-sm text-ink">Mine Official (Manager)</h3>
                 <p className="text-xs text-slate mt-1.5 leading-relaxed">
@@ -182,8 +219,8 @@ export default function LandingPage() {
             {/* Persona 2: Field Officer */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition group">
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 font-bold mb-3">
-                  FO
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 mb-3">
+                  <ClipboardCheck className="h-5 w-5" />
                 </div>
                 <h3 className="font-bold text-sm text-ink">Field Officer (Inspector)</h3>
                 <p className="text-xs text-slate mt-1.5 leading-relaxed">
@@ -202,8 +239,8 @@ export default function LandingPage() {
             {/* Persona 3: Corporate HQ */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition group">
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 font-bold mb-3">
-                  HQ
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 mb-3">
+                  <Building2 className="h-5 w-5" />
                 </div>
                 <h3 className="font-bold text-sm text-ink">Corporate (Company)</h3>
                 <p className="text-xs text-slate mt-1.5 leading-relaxed">
@@ -222,8 +259,8 @@ export default function LandingPage() {
             {/* Persona 4: System Admin */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-red-300 hover:shadow-md transition group">
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 font-bold mb-3">
-                  SA
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 mb-3">
+                  <ShieldAlert className="h-5 w-5" />
                 </div>
                 <h3 className="font-bold text-sm text-ink">System Administrator</h3>
                 <p className="text-xs text-slate mt-1.5 leading-relaxed">
