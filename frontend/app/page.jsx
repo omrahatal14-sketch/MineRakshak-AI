@@ -160,7 +160,7 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="hazards" className="relative overflow-hidden border-y border-slate-200 bg-slate-950 px-4 py-16 text-white sm:px-6">
+      <section id="hazards" className="relative overflow-hidden border-y border-slate-800 bg-slate-950 px-4 py-16 text-white sm:px-6">
         <div className="hazard-glow absolute inset-0 pointer-events-none" />
         <div className="relative mx-auto max-w-6xl">
           <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
