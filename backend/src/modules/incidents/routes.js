@@ -155,6 +155,15 @@ router.post("/dispatch", requireAuth, async (req, res, next) => {
       createdAt: new Date(),
     });
 
+    // Notify Contractor Company
+    await db.collection("notifications").add({
+      title: `[Work Order] Repair Task Assigned: ${hazardTitle}`,
+      message: `Your company (${targetCompany}) has been assigned a mandatory repair task at ${targetMineName} (${targetZone}). AI Risk: ${hazardRiskScore}/100. Statutory deadline: ${hazardDeadline}.`,
+      recipientRole: "contractor",
+      isRead: false,
+      createdAt: new Date(),
+    });
+
     await logAudit(
       req.user.uid,
       "dispatch_ai_incident",

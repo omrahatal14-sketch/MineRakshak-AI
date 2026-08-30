@@ -16,6 +16,7 @@ export const SEED_MINES = [
 export const SEED_USERS = [
   { uid: "demo_field_officer_uid", name: "Ramesh Kumar (Field Officer)", email: "field.officer@minerakshak.gov.in", role: "field_officer", mineId: "KCM-01", mineName: "Kusmunda Coal Mine", status: "active" },
   { uid: "demo_mine_official_uid", name: "Suresh Sharma (Mine Official)", email: "mine.official@minerakshak.gov.in", role: "mine_official", mineId: "KCM-01", mineName: "Kusmunda Coal Mine", status: "active" },
+  { uid: "demo_contractor_uid", name: "Vikram Singh (Contractor Company)", email: "contractor@minerakshak.gov.in", role: "contractor", mineId: "KCM-01", mineName: "Kusmunda Coal Mine", companyName: "SafeMine Engineering Pvt. Ltd.", status: "active" },
   { uid: "demo_corporate_uid", name: "Pooja Verma (Corporate HQ)", email: "corporate@minerakshak.gov.in", role: "corporate", mineId: null, mineName: null, status: "active" },
   { uid: "demo_admin_uid", name: "Rajesh Gupta (System Administrator)", email: "admin@minerakshak.gov.in", role: "admin", mineId: null, mineName: null, status: "active" },
   { uid: "fo_2", name: "Amitabh Sen (Safety Inspector)", email: "amitabh.sen@minerakshak.gov.in", role: "field_officer", mineId: "GCM-02", mineName: "Gevra Open Cast Mine", status: "active" },

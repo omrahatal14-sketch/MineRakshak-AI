@@ -6,7 +6,7 @@ import { useAuth } from "../../src/context/AuthContext.jsx";
 import Link from "next/link";
 import {
   ShieldAlert, User, Lock, Mail, ArrowRight, CheckCircle2,
-  Building2, HardHat, ShieldCheck, ArrowLeft
+  Building2, HardHat, ShieldCheck, ArrowLeft, Wrench
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -29,6 +29,8 @@ export default function LoginPage() {
         return "/field-officer";
       case "mine_official":
         return "/mine-official";
+      case "contractor":
+        return "/contractor";
       case "corporate":
         return "/corporate";
       case "admin":
@@ -167,6 +169,23 @@ export default function LoginPage() {
             </button>
 
             <button
+              onClick={() => handleQuickLogin("contractor")}
+              disabled={loading}
+              className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-orange-50/60 hover:border-orange-300 p-3 text-xs font-semibold text-ink transition group"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-100 text-orange-700 font-bold">
+                  <Wrench className="h-4.5 w-4.5" />
+                </span>
+                <div className="text-left">
+                  <p className="font-bold text-ink">Contractor Company (Repair)</p>
+                  <p className="text-[11px] text-slate">Assigned Tasks, Deadlines & Proof Upload</p>
+                </div>
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate group-hover:text-orange-600 transition" />
+            </button>
+
+            <button
               onClick={() => handleQuickLogin("corporate")}
               disabled={loading}
               className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-emerald-50/60 hover:border-emerald-300 p-3 text-xs font-semibold text-ink transition group"
@@ -176,7 +195,7 @@ export default function LoginPage() {
                   HQ
                 </span>
                 <div className="text-left">
-                  <p className="font-bold text-ink">Corporate Management (Company)</p>
+                  <p className="font-bold text-ink">Corporate Management (Company HQ)</p>
                   <p className="text-[11px] text-slate">AI Prioritization & CAPA Deadlines</p>
                 </div>
               </div>
@@ -254,7 +273,8 @@ export default function LoginPage() {
                   >
                     <option value="mine_official">Mine Official</option>
                     <option value="field_officer">Field Officer</option>
-                    <option value="corporate">Corporate</option>
+                    <option value="contractor">Contractor Company</option>
+                    <option value="corporate">Corporate HQ</option>
                     <option value="admin">System Admin</option>
                   </select>
                 </div>
@@ -279,7 +299,7 @@ export default function LoginPage() {
               className="w-full rounded-xl bg-primary py-2.5 text-xs font-bold text-white shadow-md hover:bg-primary-dark disabled:opacity-60 transition mt-2"
             >
               {loading
-                ? "Authenticating…"
+                ? "Authenticating..."
                 : isSignup
                 ? "Create Account & Sign In"
                 : "Sign In to Dashboard"}

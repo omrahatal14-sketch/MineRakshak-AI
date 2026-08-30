@@ -30,6 +30,15 @@ const DEMO_PERSONAS = {
     mineId: "KCM-01",
     mineName: "Kusmunda Coal Mine",
   },
+  contractor: {
+    uid: "demo_contractor_uid",
+    email: "contractor@minerakshak.gov.in",
+    name: "Vikram Singh (Contractor Company)",
+    role: "contractor",
+    mineId: "KCM-01",
+    mineName: "Kusmunda Coal Mine",
+    companyName: "SafeMine Engineering Pvt. Ltd.",
+  },
   corporate: {
     uid: "demo_corporate_uid",
     email: "corporate@minerakshak.gov.in",
@@ -53,6 +62,7 @@ function inferRoleFromEmail(email) {
   const lower = email.toLowerCase();
   if (lower.includes("admin")) return "admin";
   if (lower.includes("corp")) return "corporate";
+  if (lower.includes("contractor") || lower.includes("vendor") || lower.includes("repair") || lower.includes("company")) return "contractor";
   if (lower.includes("official") || lower.includes("mine")) return "mine_official";
   if (lower.includes("inspector") || lower.includes("field")) return "field_officer";
   return "field_officer";
@@ -91,7 +101,7 @@ export function AuthProvider({ children }) {
               email: user.email,
               name: user.displayName || user.email?.split("@")[0] || "User",
               role,
-              mineId: ["mine_official", "field_officer"].includes(role) ? "KCM-01" : null,
+              mineId: ["mine_official", "field_officer", "contractor"].includes(role) ? "KCM-01" : null,
             });
           }
         } catch (err) {
@@ -101,7 +111,7 @@ export function AuthProvider({ children }) {
             email: user.email,
             name: user.displayName || user.email?.split("@")[0] || "User",
             role,
-            mineId: ["mine_official", "field_officer"].includes(role) ? "KCM-01" : null,
+            mineId: ["mine_official", "field_officer", "contractor"].includes(role) ? "KCM-01" : null,
           });
         }
       }
@@ -148,7 +158,7 @@ export function AuthProvider({ children }) {
             email: cred.user.email,
             name: cred.user.displayName || cred.user.email?.split("@")[0] || "User",
             role,
-            mineId: ["mine_official", "field_officer"].includes(role) ? "KCM-01" : null,
+            mineId: ["mine_official", "field_officer", "contractor"].includes(role) ? "KCM-01" : null,
           });
         }
       } catch {
@@ -158,7 +168,7 @@ export function AuthProvider({ children }) {
           email: cred.user.email,
           name: cred.user.displayName || cred.user.email?.split("@")[0] || "User",
           role,
-          mineId: ["mine_official", "field_officer"].includes(role) ? "KCM-01" : null,
+          mineId: ["mine_official", "field_officer", "contractor"].includes(role) ? "KCM-01" : null,
         });
       }
       return cred.user;
@@ -186,7 +196,7 @@ export function AuthProvider({ children }) {
           email: cred.user.email,
           name: name || (cred.user.email ? cred.user.email.split("@")[0] : "User"),
           role: chosenRole,
-          mineId: mineId || (["mine_official", "field_officer"].includes(chosenRole) ? "KCM-01" : null),
+          mineId: mineId || (["mine_official", "field_officer", "contractor"].includes(chosenRole) ? "KCM-01" : null),
         });
       }
       return cred.user;
@@ -198,7 +208,7 @@ export function AuthProvider({ children }) {
         email,
         name: name || email.split("@")[0],
         role: chosenRole,
-        mineId: mineId || (["mine_official", "field_officer"].includes(chosenRole) ? "KCM-01" : null),
+        mineId: mineId || (["mine_official", "field_officer", "contractor"].includes(chosenRole) ? "KCM-01" : null),
         mineName: mineId ? "Kusmunda Coal Mine" : null,
       };
       if (typeof window !== "undefined") {

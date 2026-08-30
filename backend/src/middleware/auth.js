@@ -5,6 +5,7 @@ function inferRoleFromEmail(email) {
   const lower = email.toLowerCase();
   if (lower.includes("admin")) return "admin";
   if (lower.includes("corp")) return "corporate";
+  if (lower.includes("contractor") || lower.includes("vendor") || lower.includes("repair") || lower.includes("company")) return "contractor";
   if (lower.includes("official") || lower.includes("mine")) return "mine_official";
   if (lower.includes("inspector") || lower.includes("field")) return "field_officer";
   return "field_officer";
@@ -38,7 +39,7 @@ export async function requireAuth(req, res, next) {
       email,
       name: `${role.replace("_", " ").toUpperCase()} (Demo)`,
       role,
-      mineId: ["mine_official", "field_officer"].includes(role) ? "KCM-01" : null,
+      mineId: ["mine_official", "field_officer", "contractor"].includes(role) ? "KCM-01" : null,
     };
     return next();
   }
