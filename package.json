@@ -8,6 +8,7 @@
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:ai": "uvicorn app.main:app --reload --port 8000 --app-dir ai-service",
     "dev": "concurrently -n \"BACKEND,FRONTEND,AI-SERVICE\" -c \"cyan,magenta,green\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"uvicorn app.main:app --reload --port 8000 --app-dir ai-service\"",
+    "start": "npm run dev",
     "seed": "npm run seed --prefix backend",
     "test": "npm test --prefix backend",
     "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend"
