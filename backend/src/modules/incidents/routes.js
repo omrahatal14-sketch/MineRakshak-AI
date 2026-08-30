@@ -9,8 +9,8 @@ const router = Router();
 // POST /api/incidents/ai-analyze — Run AI Hazard Vision analysis
 router.post("/ai-analyze", requireAuth, async (req, res, next) => {
   try {
-    const { fileName, contextText, mineId } = req.body;
-    const result = await analyzeHazardVision({ fileName, contextText, mineId });
+    const { fileName, contextText, mineId, base64Image } = req.body;
+    const result = await analyzeHazardVision({ fileName, contextText, mineId, base64Image });
     res.json(result);
   } catch (err) {
     next(err);

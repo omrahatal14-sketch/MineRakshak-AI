@@ -3,6 +3,7 @@ import multer from "multer";
 import { requireAuth } from "../../middleware/auth.js";
 import { db } from "../../config/firebaseAdmin.js";
 import { logAudit } from "../../services/auditService.js";
+import { analyzeDocumentOcr } from "../../services/documentAiService.js";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
@@ -59,6 +60,17 @@ router.post("/upload", requireAuth, upload.single("file"), async (req, res, next
     await db.collection("documents").doc(docId).set(docData);
     await logAudit(req.user.uid, "upload_document", "document", docId, null, docData, req.user.role);
     res.status(201).json(docData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/documents/ai-ocr — Process Document with AI OCR
+router.post("/ai-ocr", requireAuth, async (req, res, next) => {
+  try {
+    const { fileName, entityType, base64Image } = req.body;
+    const result = await analyzeDocumentOcr({ fileName, entityType, base64Image });
+    res.json(result);
   } catch (err) {
     next(err);
   }

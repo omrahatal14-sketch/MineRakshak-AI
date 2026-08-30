@@ -7,6 +7,7 @@ import {
   FileText, Upload, Sparkles, CheckCircle2, Clock,
   Search, ShieldCheck, AlertCircle, Download, ImageIcon, Eye
 } from "lucide-react";
+import { api } from "../../src/services/api.js";
 
 const SAMPLE_DOCS = [
   {
@@ -144,7 +145,17 @@ export default function DocumentsPage() {
         });
       }
 
-      const smartData = generateSmartOcrData(fileToUpload.name, entityType);
+      let smartData = null;
+      try {
+        smartData = await api.post("/documents/ai-ocr", {
+          fileName: fileToUpload.name,
+          entityType,
+          base64Image: previewUrl, // pass image if available
+        });
+      } catch (apiErr) {
+        console.warn("AI OCR failed, falling back to basic extraction", apiErr);
+        smartData = generateSmartOcrData(fileToUpload.name, entityType);
+      }
 
       const newDoc = {
         id: `doc_${Date.now()}`,
@@ -154,9 +165,9 @@ export default function DocumentsPage() {
         fileType: fileToUpload.type || (fileToUpload.name.endsWith(".pdf") ? "application/pdf" : "image/jpeg"),
         uploadedBy: profile?.name || "Platform User",
         uploadedAt: new Date().toISOString().split("T")[0],
-        ocrText: smartData.ocrText,
-        extractedRegulations: smartData.extractedRegulations,
-        extractedDeadline: smartData.extractedDeadline,
+        ocrText: smartData?.ocrText || "Extraction failed.",
+        extractedRegulations: smartData?.extractedRegulations || [],
+        extractedDeadline: smartData?.extractedDeadline || "No deadline found.",
       };
 
       const updated = [newDoc, ...documents];
