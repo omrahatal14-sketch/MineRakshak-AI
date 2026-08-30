@@ -21,7 +21,12 @@ import auditLogRoutes from "./modules/auditLogs/routes.js";
 
 const app = express();
 
-app.use(cors({ origin: env.corsOrigin }));
+app.use(
+  cors({
+    origin: true, // Automatically accepts requests from Vercel, localhost, and custom domains
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(morgan(env.nodeEnv === "development" ? "dev" : "combined"));
