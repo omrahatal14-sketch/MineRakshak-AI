@@ -68,7 +68,7 @@ export default function AppShell({ title, children, onInspectionCreated }) {
 
   const handleLogout = async () => {
     await logout();
-    router.push("/");
+    router.push("/login");
   };
 
   const homePath =

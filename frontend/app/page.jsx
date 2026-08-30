@@ -1,126 +1,342 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../src/context/AuthContext.jsx";
-import Link from "next/link";
+import {
+  ShieldAlert, Camera, MapPin, FileText, CheckCircle2,
+  TrendingUp, Clock, Users, ArrowRight, ShieldCheck,
+  Building2, HardHat, Compass, Sparkles, LogIn
+} from "lucide-react";
 
-export default function RootPage() {
-  const { profile, loading, loginAsDemo } = useAuth();
+export default function LandingPage() {
+  const { profile, loginAsDemo } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!loading && profile) {
-      const destination =
-        profile.role === "field_officer"
-          ? "/field-officer"
-          : profile.role === "mine_official"
-          ? "/mine-official"
-          : profile.role === "corporate"
-          ? "/corporate"
-          : "/admin";
-      router.push(destination);
-    }
-  }, [profile, loading, router]);
-
-  const handleQuickLogin = async (role) => {
-    await loginAsDemo(role);
+  const handleQuickLaunch = async (roleKey) => {
+    const user = await loginAsDemo(roleKey);
     const destination =
-      role === "field_officer"
+      user.role === "field_officer"
         ? "/field-officer"
-        : role === "mine_official"
+        : user.role === "mine_official"
         ? "/mine-official"
-        : role === "corporate"
+        : user.role === "corporate"
         ? "/corporate"
         : "/admin";
     router.push(destination);
   };
 
   return (
-    <div className="min-h-screen bg-canvas flex flex-col justify-center items-center px-4 py-12">
-      <div className="max-w-md w-full rounded-2xl border border-border bg-surface p-8 shadow-xl text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white shadow-md mx-auto mb-4">
-          MR
+    <div className="min-h-screen bg-canvas text-ink flex flex-col selection:bg-primary-light selection:text-primary">
+      {/* 1. Top Navbar */}
+      <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white font-bold text-sm shadow-md">
+              MR
+            </div>
+            <div>
+              <span className="font-bold text-sm text-ink leading-none">MineRakshak AI</span>
+              <span className="block text-[10px] text-slate font-medium">Smart Coal Mine Governance</span>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate">
+            <a href="#features" className="hover:text-primary transition">Innovation USPs</a>
+            <a href="#roles" className="hover:text-primary transition">Stakeholder Personas</a>
+            <a href="#workflow" className="hover:text-primary transition">Closed-Loop Workflow</a>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {profile ? (
+              <Link
+                href={
+                  profile.role === "field_officer"
+                    ? "/field-officer"
+                    : profile.role === "mine_official"
+                    ? "/mine-official"
+                    : profile.role === "corporate"
+                    ? "/corporate"
+                    : "/admin"
+                }
+                className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
+              >
+                <span>Dashboard ({profile.role})</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
+              >
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Sign In / Launch</span>
+              </Link>
+            )}
+          </div>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-ink">MineRakshak AI</h1>
-        <p className="text-xs text-slate mt-1 mb-6">
-          AI-based Smart Governance & Statutory Compliance Platform for Coal Mines
+      </header>
+
+      {/* 2. Hero Section */}
+      <section className="relative px-4 sm:px-6 pt-16 pb-20 max-w-6xl mx-auto w-full text-center">
+        {/* Hackathon Badge */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary-light px-3.5 py-1 text-xs font-bold text-primary mb-6 shadow-xs animate-fade-in">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span>Smart India Hackathon 2026 • Team TechNova_07</span>
+        </div>
+
+        <p className="text-xs font-mono font-bold uppercase tracking-widest text-primary mb-2">
+          From Reactive Compliance to Predictive Mine Governance
         </p>
 
-        <div className="space-y-2.5 text-left">
-          <p className="text-xs font-bold text-slate uppercase tracking-wider mb-2">
-            Select Role to Access Dashboard:
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink max-w-4xl mx-auto leading-tight sm:leading-tight">
+          AI-Based Smart Governance & Compliance Platform for Coal Mines
+        </h1>
+
+        <p className="mt-4 text-xs sm:text-sm text-slate max-w-2xl mx-auto leading-relaxed">
+          Digitally integrates open-cast and underground coal mine operations, statutory DGMS safety tracking, automated multi-party dispatch with AI deadlines, explainable risk analytics, and paperless OCR intelligence.
+        </p>
+
+        {/* Hero Actions */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-xs font-bold text-white shadow-lg hover:bg-primary-dark transition"
+          >
+            <span>Launch Platform Portal</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+
+          <Link
+            href="/map"
+            className="flex items-center gap-2 rounded-xl border border-border bg-surface px-5 py-3 text-xs font-semibold text-ink shadow-xs hover:bg-slate-50 transition"
+          >
+            <MapPin className="h-4 w-4 text-primary" />
+            <span>Interactive GIS Mine Map</span>
+          </Link>
+        </div>
+
+        {/* Live System Stat Bar */}
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+            <span className="text-[10px] font-bold uppercase text-slate">Monitored Facilities</span>
+            <p className="text-lg font-bold text-ink mt-0.5">10 Coal Mines</p>
+            <p className="text-[10px] text-slate">SECL, WCL, BCCL, ECL</p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+            <span className="text-[10px] font-bold uppercase text-slate">AI Hazard Vision</span>
+            <p className="text-lg font-bold text-primary mt-0.5">Automatic Dispatch</p>
+            <p className="text-[10px] text-slate">Inspector & Contractor alerts</p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+            <span className="text-[10px] font-bold uppercase text-slate">CAPA Workflow</span>
+            <p className="text-lg font-bold text-emerald-600 mt-0.5">Closed-Loop</p>
+            <p className="text-[10px] text-slate">5-stage statutory closure</p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-3.5 shadow-xs">
+            <span className="text-[10px] font-bold uppercase text-slate">Audit Trail</span>
+            <p className="text-lg font-bold text-ink mt-0.5">Tamper-Evident</p>
+            <p className="text-[10px] text-slate">Immutable timestamped logs</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. 4 Stakeholder Personas Section */}
+      <section id="roles" className="px-4 sm:px-6 py-16 bg-surface border-y border-border">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">Role-Based Architecture</span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+              Integrated Multi-Stakeholder Governance
+            </h2>
+            <p className="text-xs text-slate mt-2">
+              Four tailored dashboards providing real-time visibility, automated workflows, and data-driven insights.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Persona 1: Mine Official */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-purple-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-700 font-bold mb-3">
+                  MO
+                </div>
+                <h3 className="font-bold text-sm text-ink">Mine Official (Manager)</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Captures site incident photos with AI Hazard Vision, triggers automated multi-party dispatch, and tracks active pit non-conformances.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("mine_official")}
+                className="mt-5 w-full rounded-lg bg-purple-50 text-purple-700 font-bold text-xs py-2 hover:bg-purple-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch Mine Official</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Persona 2: Field Officer */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 font-bold mb-3">
+                  FO
+                </div>
+                <h3 className="font-bold text-sm text-ink">Field Officer (Inspector)</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Conducts geo-tagged mobile audits with GPS time-stamping, logs observations, and physically verifies resolved contractor CAPAs.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("field_officer")}
+                className="mt-5 w-full rounded-lg bg-blue-50 text-blue-700 font-bold text-xs py-2 hover:bg-blue-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch Field Inspector</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Persona 3: Corporate HQ */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 font-bold mb-3">
+                  HQ
+                </div>
+                <h3 className="font-bold text-sm text-ink">Corporate (Company)</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Monitors multi-mine AI inspection rankings, fulfills company CAPA rectifications against statutory deadlines, and views GIS maps.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("corporate")}
+                className="mt-5 w-full rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs py-2 hover:bg-emerald-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch Corporate HQ</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Persona 4: System Admin */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-red-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 font-bold mb-3">
+                  SA
+                </div>
+                <h3 className="font-bold text-sm text-ink">System Administrator</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Manages user roles, registers coal mine facilities, and audits immutable statutory governance logs across the entire ecosystem.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("admin")}
+                className="mt-5 w-full rounded-lg bg-red-50 text-red-700 font-bold text-xs py-2 hover:bg-red-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch System Admin</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Innovation & Uniqueness Highlights (From SIH Poster) */}
+      <section id="features" className="px-4 sm:px-6 py-16 max-w-6xl mx-auto w-full">
+        <div className="text-center max-w-xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary">Core Innovations</span>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+            TechNova_07 Innovation USPs
+          </h2>
+          <p className="text-xs text-slate mt-2">
+            6 specialized intelligence capabilities advancing statutory mining governance.
           </p>
-
-          <button
-            onClick={() => handleQuickLogin("admin")}
-            className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-primary-light hover:border-primary/40 p-3.5 text-xs font-semibold text-ink transition group"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 text-red-700 font-bold">
-                SA
-              </span>
-              <div>
-                <p className="font-bold text-ink">System Administrator</p>
-                <p className="text-[11px] text-slate">Governance & user control center</p>
-              </div>
-            </div>
-            <span className="text-slate group-hover:text-primary transition font-bold">→</span>
-          </button>
-
-          <button
-            onClick={() => handleQuickLogin("mine_official")}
-            className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-primary-light hover:border-primary/40 p-3.5 text-xs font-semibold text-ink transition group"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700 font-bold">
-                MO
-              </span>
-              <div>
-                <p className="font-bold text-ink">Mine Official (Manager)</p>
-                <p className="text-[11px] text-slate">Operations & AI hazard vision</p>
-              </div>
-            </div>
-            <span className="text-slate group-hover:text-primary transition font-bold">→</span>
-          </button>
-
-          <button
-            onClick={() => handleQuickLogin("field_officer")}
-            className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-primary-light hover:border-primary/40 p-3.5 text-xs font-semibold text-ink transition group"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-bold">
-                FO
-              </span>
-              <div>
-                <p className="font-bold text-ink">Field Officer (Inspector)</p>
-                <p className="text-[11px] text-slate">On-site audit logs & evidence</p>
-              </div>
-            </div>
-            <span className="text-slate group-hover:text-primary transition font-bold">→</span>
-          </button>
-
-          <button
-            onClick={() => handleQuickLogin("corporate")}
-            className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-primary-light hover:border-primary/40 p-3.5 text-xs font-semibold text-ink transition group"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 font-bold">
-                HQ
-              </span>
-              <div>
-                <p className="font-bold text-ink">Corporate Headquarters</p>
-                <p className="text-[11px] text-slate">Cross-mine risk analytics & GIS</p>
-              </div>
-            </div>
-            <span className="text-slate group-hover:text-primary transition font-bold">→</span>
-          </button>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-border text-[11px] text-slate">
-          Ministry of Coal & DGMS Statutory Compliance System
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <TrendingUp className="h-4 w-4 text-red-600" />
+              <span>Predictive Compliance</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              Predicts potential compliance failures using historical violation patterns and generates early alerts for proactive preventive maintenance.
+            </p>
+          </div>
+
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <Sparkles className="h-4 w-4 text-purple-600" />
+              <span>Explainable Risk Analysis (XAI)</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              Shows <strong>why</strong> a mine or pit is high-risk by breaking down exact contributing risk factors rather than relying on a black-box score.
+            </p>
+          </div>
+
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <Compass className="h-4 w-4 text-blue-600" />
+              <span>Smart Inspection Prioritization</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              AI automatically identifies and ranks high-risk mines requiring immediate regulatory inspections based on risk telemetry.
+            </p>
+          </div>
+
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              <span>Closed-Loop Corrective Action</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              Tracks the full lifecycle from AI hazard detection to company remediation, AI deadline enforcement, inspector verification, and final closure.
+            </p>
+          </div>
+
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <MapPin className="h-4 w-4 text-amber-600" />
+              <span>Mine-Wise Risk Visualization</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              Interactive GIS map displaying all 10 Indian coal mines with risk heat coding, zone telemetry, and active violations for faster decisions.
+            </p>
+          </div>
+
+          <div className="card p-5 space-y-2 border hover:border-primary/40 transition">
+            <div className="flex items-center gap-2 font-bold text-sm text-ink">
+              <FileText className="h-4 w-4 text-primary" />
+              <span>OCR Compliance Intelligence</span>
+            </div>
+            <p className="text-xs text-slate leading-relaxed">
+              Converts scanned DGMS circulars and certificates into digital records, auto-extracting statutory regulations and filing deadlines.
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* 5. Footer */}
+      <footer className="mt-auto border-t border-border bg-surface px-4 sm:px-6 py-8">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate">
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary text-white font-bold text-[10px]">
+              MR
+            </span>
+            <span className="font-bold text-ink">MineRakshak AI</span>
+            <span>• Ministry of Coal & DGMS Statutory Governance Platform</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px]">
+            <span>Smart India Hackathon 2026</span>
+            <span>•</span>
+            <Link href="/login" className="font-semibold text-primary hover:underline">
+              Access Portal &rarr;
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
