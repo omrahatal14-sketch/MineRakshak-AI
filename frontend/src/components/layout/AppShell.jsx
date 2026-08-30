@@ -16,6 +16,7 @@ const ROLE_LABELS = {
   field_officer: "Field Officer",
   mine_official: "Mine Official",
   contractor: "Contractor Company",
+  worker: "Worker / Miner",
   corporate: "Corporate Management",
   admin: "System Admin",
 };
@@ -79,6 +80,8 @@ export default function AppShell({ title, children, onInspectionCreated }) {
       ? "/mine-official"
       : profile?.role === "contractor"
       ? "/contractor"
+      : profile?.role === "worker"
+      ? "/worker"
       : profile?.role === "corporate"
       ? "/corporate"
       : "/admin";
@@ -88,7 +91,7 @@ export default function AppShell({ title, children, onInspectionCreated }) {
 
   // Navigation items per role
   const navItems = [
-    { href: homePath, icon: LayoutDashboard, label: "Dashboard", roles: ["field_officer", "mine_official", "contractor", "corporate", "admin"] },
+    { href: homePath, icon: LayoutDashboard, label: "Dashboard", roles: ["field_officer", "mine_official", "contractor", "worker", "corporate", "admin"] },
     { href: "/inspections", icon: SearchIcon, label: "Inspections", roles: ["field_officer", "mine_official", "corporate", "admin"] },
     { href: "/corrective-actions", icon: ShieldCheck, label: "My Tasks", roles: ["contractor"] },
     { href: "/corrective-actions", icon: ShieldCheck, label: "Corrective Actions", roles: ["field_officer", "mine_official", "corporate", "admin"] },

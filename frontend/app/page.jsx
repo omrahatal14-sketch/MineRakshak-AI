@@ -65,6 +65,8 @@ export default function LandingPage() {
         ? "/mine-official"
         : user.role === "contractor"
         ? "/contractor"
+        : user.role === "worker"
+        ? "/worker"
         : user.role === "corporate"
         ? "/corporate"
         : "/admin";
@@ -103,6 +105,8 @@ export default function LandingPage() {
                     ? "/mine-official"
                     : profile.role === "contractor"
                     ? "/contractor"
+                    : profile.role === "worker"
+                    ? "/worker"
                     : profile.role === "corporate"
                     ? "/corporate"
                     : "/admin"
@@ -272,7 +276,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. 5 Stakeholder Personas Section */}
+      {/* 3. 6 Stakeholder Personas Section */}
       <section id="roles" className="px-4 sm:px-6 py-16 bg-surface border-y border-border">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-12">
@@ -281,11 +285,11 @@ export default function LandingPage() {
               Integrated Multi-Stakeholder Governance
             </h2>
             <p className="text-xs text-slate mt-2">
-              Five tailored dashboards providing real-time visibility, automated workflows, and data-driven insights.
+              Six tailored dashboards providing real-time visibility, automated workflows, and data-driven insights.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Persona 1: Mine Official */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-purple-300 hover:shadow-md transition group">
               <div>
@@ -346,7 +350,27 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Persona 4: Corporate HQ */}
+            {/* Persona 4: Worker / Miner */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-yellow-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700 mb-3">
+                  <HardHat className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-sm text-ink">Worker / Miner (Operations)</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Performs GPS check-ins, confirms PPE, reports frontline hazards, triggers Emergency SOS, and tracks daily safety tasks.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("worker")}
+                className="mt-5 w-full rounded-lg bg-yellow-50 text-yellow-700 font-bold text-xs py-2 hover:bg-yellow-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch Worker / Miner</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Persona 5: Corporate HQ */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition group">
               <div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 mb-3">
@@ -366,7 +390,7 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Persona 5: System Admin */}
+            {/* Persona 6: System Admin */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-red-300 hover:shadow-md transition group">
               <div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 mb-3">

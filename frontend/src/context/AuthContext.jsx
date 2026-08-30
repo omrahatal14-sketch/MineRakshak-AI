@@ -55,6 +55,15 @@ const DEMO_PERSONAS = {
     mineId: null,
     mineName: null,
   },
+  worker: {
+    uid: "demo_worker_uid",
+    email: "worker@minerakshak.gov.in",
+    name: "Raju Mahto (Pit Miner / Plant Operator)",
+    role: "worker",
+    mineId: "KCM-01",
+    mineName: "Kusmunda Coal Mine",
+    shift: "Shift A (06:00 - 14:00)",
+  },
 };
 
 function inferRoleFromEmail(email) {
@@ -63,6 +72,7 @@ function inferRoleFromEmail(email) {
   if (lower.includes("admin")) return "admin";
   if (lower.includes("corp")) return "corporate";
   if (lower.includes("contractor") || lower.includes("vendor") || lower.includes("repair") || lower.includes("company")) return "contractor";
+  if (lower.includes("worker") || lower.includes("miner") || lower.includes("operator")) return "worker";
   if (lower.includes("official") || lower.includes("mine")) return "mine_official";
   if (lower.includes("inspector") || lower.includes("field")) return "field_officer";
   return "field_officer";

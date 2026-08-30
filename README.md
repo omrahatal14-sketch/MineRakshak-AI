@@ -21,7 +21,7 @@ In coal mining operations, safety is governed by strict statutory guidelines (un
 
 - **AI Computer Vision Hazard Analysis**: Evaluates visual defect features across 5 major mine hazard categories: Mechanical/Conveyor, Geotechnical/Slope Stability, Heavy Machinery (HEMM), Haul Road Safety Berms, and Environmental Dust Suppression.
 - **Auto-Calculated Statutory Deadlines**: Dynamically calculates remediation timelines based on DGMS severity guidelines (24 Hours for Critical, 48 Hours for High, 5-7 Days for Medium).
-- **Role-Based Access Control (RBAC)**: 5 segregated user roles (Field Officer, Mine Official, Contractor Company, Corporate Management, System Administrator).
+- **Role-Based Access Control (RBAC)**: 6 segregated user roles (Worker, Field Officer, Mine Official, Contractor Company, Corporate Management, System Administrator).
 - **Contractor Repair Portal**: Dedicated dashboard for repair companies to view assigned tasks, AI risk assessments, statutory deadlines with countdown timers, and submit photo proof of completed repairs.
 - **Multi-Mine Risk Benchmarking**: Real-time comparative safety telemetry across all operational pits and subsidiaries.
 - **Immutable DGMS Audit Trail**: Tamper-proof logging of all incident creation, status transitions, review sign-offs, and administrative changes.
@@ -33,6 +33,7 @@ In coal mining operations, safety is governed by strict statutory guidelines (un
 
 | Role | Who They Are | Key Responsibilities |
 | :--- | :--- | :--- |
+| **Worker / Miner** | Pit Miner / Operator | Performs GPS attendance check-ins, confirms daily PPE, reports frontline hazards, triggers Emergency SOS, and tracks personal safety tasks. |
 | **Field Officer** | Ground Safety Inspector | Conducts scheduled audits, records digital observations, uploads multi-evidence proofs (photos/videos/PDFs), and verifies contractor fixes. |
 | **Mine Official** | Mine Agent / Pit Manager | Captures on-site hazards with AI Vision, reviews submitted field inspections, auto-dispatches contractor work orders, and signs off on verified fixes. |
 | **Contractor Company** | Repair / Maintenance Vendor | Receives assigned work orders with AI risk scores and statutory deadlines, completes physical repairs, and uploads photo proof of completed work. |

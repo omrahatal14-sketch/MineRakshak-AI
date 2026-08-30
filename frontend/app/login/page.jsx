@@ -31,6 +31,8 @@ export default function LoginPage() {
         return "/mine-official";
       case "contractor":
         return "/contractor";
+      case "worker":
+        return "/worker";
       case "corporate":
         return "/corporate";
       case "admin":
@@ -133,6 +135,23 @@ export default function LoginPage() {
             <p className="text-[11px] font-bold text-slate uppercase tracking-wider mb-2">
               Select Stakeholder Persona:
             </p>
+
+            <button
+              onClick={() => handleQuickLogin("worker")}
+              disabled={loading}
+              className="w-full flex items-center justify-between rounded-xl border border-border bg-canvas hover:bg-yellow-50/60 hover:border-yellow-300 p-3 text-xs font-semibold text-ink transition group"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700 font-bold">
+                  <HardHat className="h-4.5 w-4.5" />
+                </span>
+                <div className="text-left">
+                  <p className="font-bold text-ink">Worker (Pit Miner / Operator)</p>
+                  <p className="text-[11px] text-slate">GPS Attendance, Tasks, PPE & SOS</p>
+                </div>
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate group-hover:text-yellow-600 transition" />
+            </button>
 
             <button
               onClick={() => handleQuickLogin("mine_official")}
@@ -274,6 +293,7 @@ export default function LoginPage() {
                     <option value="mine_official">Mine Official</option>
                     <option value="field_officer">Field Officer</option>
                     <option value="contractor">Contractor Company</option>
+                    <option value="worker">Worker / Miner</option>
                     <option value="corporate">Corporate HQ</option>
                     <option value="admin">System Admin</option>
                   </select>

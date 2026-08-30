@@ -10,6 +10,7 @@ const ROLE_DISPLAY = {
   field_officer: { label: "Field Officer", badge: "bg-blue-50 text-blue-700 border-blue-200" },
   mine_official: { label: "Mine Official", badge: "bg-purple-50 text-purple-700 border-purple-200" },
   contractor: { label: "Contractor", badge: "bg-orange-50 text-orange-700 border-orange-200" },
+  worker: { label: "Worker / Miner", badge: "bg-yellow-50 text-yellow-700 border-yellow-200" },
   corporate: { label: "Corporate", badge: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   admin: { label: "Administrator", badge: "bg-red-50 text-red-700 border-red-200" },
 };
@@ -143,6 +144,7 @@ export default function AdminPage() {
                 <option value="field_officer">Field Officers</option>
                 <option value="mine_official">Mine Officials</option>
                 <option value="contractor">Contractors</option>
+                <option value="worker">Workers / Miners</option>
                 <option value="corporate">Corporate Users</option>
                 <option value="admin">Administrators</option>
               </select>
