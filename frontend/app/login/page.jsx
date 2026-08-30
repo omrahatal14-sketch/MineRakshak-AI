@@ -78,7 +78,7 @@ export default function LoginPage() {
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>Back to Home</span>
         </Link>
-        <span className="text-[11px] font-mono text-slate">SIH 2026 • TechNova_07</span>
+        <span className="text-[11px] font-mono text-slate">DGMS Statutory Platform</span>
       </div>
 
       <div className="max-w-md w-full rounded-2xl border border-border bg-surface p-8 shadow-xl">

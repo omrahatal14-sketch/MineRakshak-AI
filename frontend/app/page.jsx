@@ -80,10 +80,10 @@ export default function LandingPage() {
 
       {/* 2. Hero Section */}
       <section className="relative px-4 sm:px-6 pt-16 pb-20 max-w-6xl mx-auto w-full text-center">
-        {/* Hackathon Badge */}
+        {/* National Initiative Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary-light px-3.5 py-1 text-xs font-bold text-primary mb-6 shadow-xs animate-fade-in">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <span>Smart India Hackathon 2026 • Team TechNova_07</span>
+          <span>Ministry of Coal • Smart Governance Initiative</span>
         </div>
 
         <p className="text-xs font-mono font-bold uppercase tracking-widest text-primary mb-2">
@@ -242,15 +242,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Innovation & Uniqueness Highlights (From SIH Poster) */}
+      {/* 4. Core Platform Innovations */}
       <section id="features" className="px-4 sm:px-6 py-16 max-w-6xl mx-auto w-full">
         <div className="text-center max-w-xl mx-auto mb-12">
           <span className="text-xs font-bold uppercase tracking-wider text-primary">Core Innovations</span>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
-            TechNova_07 Innovation USPs
+            Platform Intelligence Capabilities
           </h2>
           <p className="text-xs text-slate mt-2">
-            6 specialized intelligence capabilities advancing statutory mining governance.
+            6 specialized intelligence modules advancing statutory mining governance.
           </p>
         </div>
 
@@ -329,7 +329,7 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
-            <span>Smart India Hackathon 2026</span>
+            <span>National Mining Safety Portal</span>
             <span>•</span>
             <Link href="/login" className="font-semibold text-primary hover:underline">
               Access Portal &rarr;

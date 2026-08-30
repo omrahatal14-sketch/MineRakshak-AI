@@ -155,7 +155,7 @@ export default function DocumentsPage() {
 
         {/* Right 2 Cols: OCR Text & Extracted Compliance Intelligence */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Card 1: AI Compliance Intelligence Extraction (SIH USP) */}
+          {/* Card 1: AI Compliance Intelligence Extraction */}
           <div className="card p-5 border-primary/30 bg-blue-50/20 space-y-4">
             <div className="flex items-center justify-between border-b border-primary/20 pb-3">
               <div className="flex items-center gap-2">
