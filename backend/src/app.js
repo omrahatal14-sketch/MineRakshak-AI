@@ -18,6 +18,7 @@ import notificationRoutes from "./modules/notifications/routes.js";
 import dashboardRoutes from "./modules/dashboard/routes.js";
 import reportRoutes from "./modules/reports/routes.js";
 import auditLogRoutes from "./modules/auditLogs/routes.js";
+import workerRoutes from "./modules/worker/routes.js";
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/audit-logs", auditLogRoutes);
+app.use("/api/worker", workerRoutes);
 
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 app.use(errorHandler);

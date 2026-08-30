@@ -20,6 +20,30 @@ router.get("/", requireAuth, async (req, res, next) => {
   }
 });
 
+// POST /api/notifications — Create a new notification (e.g. SOS)
+router.post("/", requireAuth, async (req, res, next) => {
+  try {
+    const { type, title, message, priority, recipients } = req.body;
+    
+    // In a real app, we'd loop through recipients or broadcast based on roles.
+    // For this prototype, we'll create a global notification.
+    const notif = {
+      type: type || "ALERT",
+      title: title || "New Notification",
+      message: message || "",
+      priority: priority || "medium",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      sourceUserId: req.user.uid
+    };
+    
+    const docRef = await db.collection("notifications").add(notif);
+    res.json({ id: docRef.id, ...notif });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PUT /api/notifications/:id/read — Mark notification as read
 router.put("/:id/read", requireAuth, async (req, res, next) => {
   try {
