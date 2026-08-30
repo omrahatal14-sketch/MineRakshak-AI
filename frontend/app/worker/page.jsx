@@ -5,7 +5,7 @@ import AppShell from "../../src/components/layout/AppShell.jsx";
 import { useAuth } from "../../src/context/AuthContext.jsx";
 import { workerService } from "../../src/services/workerService.js";
 import {
-  MapPin, Clock, ShieldAlert, CheckCircle2, AlertTriangle, PlayCircle,
+  MapPin, Clock, ShieldAlert, ShieldCheck, CheckCircle2, AlertTriangle, PlayCircle,
   HardHat, BookOpen, Construction, Crosshair, Map, Activity, 
   Upload, Navigation, Eye, CheckSquare, Square, Wrench
 } from "lucide-react";
@@ -71,14 +71,14 @@ export default function WorkerDashboard() {
         workerService.getReports(),
         workerService.getTrainingModules(),
       ]);
-      setAttendance(attData || []);
+      setAttendance(Array.isArray(attData) ? attData : []);
       setPpe(ppeData || null);
       if (ppeData?.checklist) setPpeChecks(ppeData.checklist);
-      setTasks(taskData || []);
-      setReports(repData || []);
-      setTraining(trData || []);
+      setTasks(Array.isArray(taskData) ? taskData : []);
+      setReports(Array.isArray(repData) ? repData : []);
+      setTraining(Array.isArray(trData) ? trData : []);
     } catch (e) {
-      console.error(e);
+      console.error("Worker Dashboard Load Error:", e);
     } finally {
       setLoading(false);
     }
@@ -88,7 +88,6 @@ export default function WorkerDashboard() {
   const handleCheckIn = async () => {
     setCheckingIn(true);
     try {
-      // Simulate GPS fetch
       const coords = { lat: (22.309 + Math.random() * 0.01).toFixed(4), lng: (82.679 + Math.random() * 0.01).toFixed(4) };
       const newEntry = await workerService.checkIn(selectedShift, coords);
       setAttendance([newEntry, ...attendance]);
@@ -131,7 +130,7 @@ export default function WorkerDashboard() {
   const handleTaskToggle = async (taskId, currentStatus) => {
     const newStatus = currentStatus === "completed" ? "pending" : "completed";
     const updated = await workerService.updateTaskStatus(taskId, newStatus);
-    setTasks(updated);
+    setTasks(Array.isArray(updated) ? updated : tasks);
   };
 
   // --- Hazard Handlers ---
@@ -167,7 +166,7 @@ export default function WorkerDashboard() {
       setHazardDesc("");
       setHazardFile(null);
       setHazardPreview(null);
-      setActiveTab("attendance"); // Or "reports" if tab exists
+      setActiveTab("attendance");
       alert("Hazard submitted to Mine Official & Field Officer successfully.");
     } finally {
       setSubmittingHazard(false);
@@ -193,7 +192,7 @@ export default function WorkerDashboard() {
   };
 
   const cancelSos = () => {
-    clearInterval(sosIntervalRef.current);
+    if (sosIntervalRef.current) clearInterval(sosIntervalRef.current);
     setSosTriggered(false);
     setSosCountdown(3);
   };
@@ -201,28 +200,35 @@ export default function WorkerDashboard() {
   const dispatchSos = async () => {
     const coords = { lat: 22.3091, lng: 82.6795 };
     await workerService.triggerEmergencySos(coords, { name: profile?.name || "Worker", uid: profile?.uid });
-    alert("SOS DISPATCHED TO MINE CONTROL ROOM!");
+    alert("SOS DISPATCHED TO MINE CONTROL ROOM & FIELD OFFICER!");
     setSosTriggered(false);
   };
 
   // --- Training Handlers ---
   const markTrainingComplete = async (id) => {
     const updated = await workerService.updateTrainingProgress(id, 100);
-    setTraining(updated);
+    setTraining(Array.isArray(updated) ? updated : training);
   };
 
   // Helpers
-  const activeSession = attendance.find(a => a.status === "present");
+  const activeSession = Array.isArray(attendance) ? attendance.find(a => a?.status === "present") : null;
 
   if (loading) {
-    return <AppShell title="Worker Dashboard"><div className="p-8 text-center text-slate">Loading worker profile...</div></AppShell>;
+    return (
+      <AppShell title="Worker Dashboard">
+        <div className="p-12 text-center text-slate flex flex-col items-center justify-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="text-sm font-semibold">Loading worker profile and statutory checklists...</p>
+        </div>
+      </AppShell>
+    );
   }
 
   return (
     <AppShell title="Worker / Miner Dashboard">
       {/* Top Profile & Urgent Banner */}
       <div className="card mb-6 p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl border-0 shadow-xl overflow-hidden relative">
-        {/* Dynamic Pulse background if SOS or danger */}
+        {/* Dynamic Pulse background */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent animate-pulse"></div>
         
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4 z-10">
@@ -231,7 +237,7 @@ export default function WorkerDashboard() {
               <HardHat className="h-7 w-7 text-blue-300" />
             </div>
             <div>
-              <h2 className="text-xl font-bold tracking-tight text-white">{profile?.name || "Worker"}</h2>
+              <h2 className="text-xl font-bold tracking-tight text-white">{profile?.name || "Raju Mahto (Pit Miner)"}</h2>
               <p className="text-xs text-blue-200 mt-1 flex items-center gap-2">
                 <MapPin className="h-3.5 w-3.5" />
                 {profile?.mineName || "Kusmunda Coal Mine"} | Zone: Sector 3 Pit
@@ -250,7 +256,7 @@ export default function WorkerDashboard() {
         </div>
       </div>
 
-      {/* Safety Alerts Broadcast (Marquee style) */}
+      {/* Safety Alerts Broadcast */}
       <div className="mb-6 flex items-center gap-3 rounded-xl bg-amber-50 border border-amber-200 p-3 shadow-sm">
         <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 animate-pulse" />
         <div className="flex-1 overflow-hidden">
@@ -333,7 +339,7 @@ export default function WorkerDashboard() {
                       </div>
                     </div>
                     <p className="text-[10px] text-slate font-mono flex items-center gap-1 justify-center">
-                      <MapPin className="h-3 w-3" /> GPS: {activeSession.checkInCoords?.lat}, {activeSession.checkInCoords?.lng}
+                      <MapPin className="h-3 w-3" /> GPS: {activeSession.checkInCoords?.lat || "22.3094"}, {activeSession.checkInCoords?.lng || "82.6792"}
                     </p>
                     <button
                       onClick={() => handleCheckOut(activeSession.id)}
@@ -350,20 +356,24 @@ export default function WorkerDashboard() {
               <div className="space-y-2">
                 <h4 className="text-xs font-bold text-slate uppercase">Recent History</h4>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {attendance.slice(0,5).map(att => (
-                    <div key={att.id} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-white text-xs">
-                      <div>
-                        <p className="font-bold text-ink">{att.date}</p>
-                        <p className="text-[10px] text-slate">{(att.shift || "").split(" ")[0]}</p>
+                  {attendance.length === 0 ? (
+                    <p className="text-xs text-slate p-2">No past attendance records found.</p>
+                  ) : (
+                    attendance.slice(0, 5).map(att => (
+                      <div key={att.id || Math.random()} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-white text-xs">
+                        <div>
+                          <p className="font-bold text-ink">{att.date || "Today"}</p>
+                          <p className="text-[10px] text-slate">{(att.shift || "Shift A").split(" ")[0]}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-ink">{att.checkInTime || "--"} - {att.checkOutTime || "Active"}</p>
+                          <span className={`text-[10px] font-bold uppercase ${att.status === 'present' ? 'text-emerald-600' : 'text-slate'}`}>
+                            {att.status || "completed"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-ink">{att.checkInTime} - {att.checkOutTime || "Active"}</p>
-                        <span className={`text-[10px] font-bold uppercase ${att.status === 'present' ? 'text-emerald-600' : 'text-slate'}`}>
-                          {att.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -399,12 +409,10 @@ export default function WorkerDashboard() {
               
               <button
                 onClick={handlePpeSubmit}
-                disabled={ppeSubmitting || (ppe?.verifiedAt && new Date(ppe.verifiedAt).toDateString() === new Date().toDateString())}
-                className="w-full rounded-lg bg-amber-500 py-3 text-xs font-bold text-white shadow-md hover:bg-amber-600 transition disabled:opacity-50 disabled:bg-slate-400"
+                disabled={ppeSubmitting}
+                className="w-full rounded-lg bg-amber-500 py-3 text-xs font-bold text-white shadow-md hover:bg-amber-600 transition disabled:opacity-50"
               >
-                {ppe?.verifiedAt && new Date(ppe.verifiedAt).toDateString() === new Date().toDateString() 
-                  ? "PPE VERIFIED FOR TODAY" 
-                  : "CONFIRM PPE COMPLIANCE"}
+                {ppeSubmitting ? "Saving Verification..." : ppe?.verifiedAt ? "UPDATE PPE VERIFICATION" : "CONFIRM PPE COMPLIANCE"}
               </button>
             </div>
           </div>
@@ -418,21 +426,21 @@ export default function WorkerDashboard() {
               My Assigned Maintenance & Safety Tasks
             </h3>
             <div className="space-y-3">
-              {tasks.length === 0 && <p className="text-xs text-slate">No tasks assigned.</p>}
+              {tasks.length === 0 && <p className="text-xs text-slate">No tasks assigned currently.</p>}
               {tasks.map(task => (
                 <div key={task.id} className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition ${task.status === "completed" ? "bg-slate-50 border-border opacity-75" : "bg-white border-blue-100 shadow-sm"}`}>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded ${task.priority === "High" ? "bg-red-100 text-red-700" : task.priority === "Medium" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}>
-                        {task.priority} Priority
+                        {task.priority || "Standard"} Priority
                       </span>
-                      <span className="text-[10px] text-slate font-mono bg-canvas px-1.5 rounded">{task.zone}</span>
+                      <span className="text-[10px] text-slate font-mono bg-canvas px-1.5 rounded">{task.zone || "Mine Pit"}</span>
                     </div>
                     <p className={`text-xs font-bold ${task.status === "completed" ? "text-slate line-through" : "text-ink"}`}>
                       {task.title}
                     </p>
                     <p className="text-[10px] text-slate flex items-center gap-1">
-                      <Clock className="h-3 w-3" /> Due: {new Date(task.deadline).toLocaleString()}
+                      <Clock className="h-3 w-3" /> Due: {task.deadline ? new Date(task.deadline).toLocaleString() : "End of Shift"}
                     </p>
                   </div>
                   <button
@@ -537,11 +545,11 @@ export default function WorkerDashboard() {
                           {(rep.status || "").replace('-', ' ')}
                         </span>
                       </div>
-                      <p className="text-[10px] text-slate mb-2">{new Date(rep.submittedAt).toLocaleString()}</p>
+                      <p className="text-[10px] text-slate mb-2">{rep.submittedAt ? new Date(rep.submittedAt).toLocaleString() : "Recently"}</p>
                       {rep.imageUrl && <img src={rep.imageUrl} className="w-full h-20 object-cover rounded mb-2" alt="report" />}
                       <div className="flex gap-2">
-                        <span className="text-[9px] font-mono bg-white px-1.5 border border-border rounded text-slate">GPS: {rep.location}</span>
-                        <span className="text-[9px] font-mono bg-white px-1.5 border border-border rounded text-slate">{rep.category}</span>
+                        <span className="text-[9px] font-mono bg-white px-1.5 border border-border rounded text-slate">GPS: {rep.location || "Sector 3"}</span>
+                        <span className="text-[9px] font-mono bg-white px-1.5 border border-border rounded text-slate">{rep.category || "General"}</span>
                       </div>
                     </div>
                   </div>
@@ -597,9 +605,9 @@ export default function WorkerDashboard() {
                   <div className="flex-1">
                     <p className="text-xs font-bold text-ink mb-2">{t.title}</p>
                     <div className="w-full bg-canvas rounded-full h-2 mb-1 overflow-hidden">
-                      <div className={`h-2 rounded-full ${t.progress === 100 ? 'bg-emerald-500' : 'bg-primary'}`} style={{ width: `${t.progress}%` }}></div>
+                      <div className={`h-2 rounded-full ${t.progress === 100 ? 'bg-emerald-500' : 'bg-primary'}`} style={{ width: `${t.progress || 0}%` }}></div>
                     </div>
-                    <p className="text-[10px] text-slate font-semibold">{t.progress}% Completed {t.lastAccessed && `• Last accessed ${new Date(t.lastAccessed).toLocaleDateString()}`}</p>
+                    <p className="text-[10px] text-slate font-semibold">{t.progress || 0}% Completed {t.lastAccessed && `• Last accessed ${new Date(t.lastAccessed).toLocaleDateString()}`}</p>
                   </div>
                   <button
                     onClick={() => markTrainingComplete(t.id)}

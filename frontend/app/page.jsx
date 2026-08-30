@@ -56,6 +56,20 @@ export default function LandingPage() {
   const { profile, loginAsDemo, logout } = useAuth();
   const router = useRouter();
 
+  const userHomePath = profile
+    ? profile.role === "field_officer"
+      ? "/field-officer"
+      : profile.role === "mine_official"
+      ? "/mine-official"
+      : profile.role === "contractor"
+      ? "/contractor"
+      : profile.role === "worker"
+      ? "/worker"
+      : profile.role === "corporate"
+      ? "/corporate"
+      : "/admin"
+    : "/login";
+
   const handleQuickLaunch = async (roleKey) => {
     const user = await loginAsDemo(roleKey);
     const destination =
@@ -163,10 +177,10 @@ export default function LandingPage() {
         {/* Hero Actions */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
           <Link
-            href="/login"
+            href={userHomePath}
             className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-xs font-bold text-white shadow-lg hover:bg-primary-dark transition"
           >
-            <span>Launch Platform Portal</span>
+            <span>{profile ? `Enter ${profile.role === 'worker' ? 'Worker' : profile.role.replace('_', ' ')} Dashboard` : "Launch Platform Portal"}</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
 
