@@ -172,9 +172,9 @@ export default function MineOfficialPage() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <SeverityBadge severity={v.severity} />
-                        <h4 className="font-bold text-xs text-ink">{v.title}</h4>
+                        <h4 className="font-bold text-xs text-ink">{v.title || v.detectedHazard || "Operational Hazard Non-Conformance"}</h4>
                       </div>
-                      <p className="text-[11px] text-slate line-clamp-1">{v.description}</p>
+                      <p className="text-[11px] text-slate line-clamp-1">{v.description || v.recommendations || "Immediate remediation mandated."}</p>
                       <div className="flex items-center gap-3 text-[10px] text-slate font-medium">
                         <span>Zone: <strong>{v.zone || v.location || "Pit Sector"}</strong></span>
                         <span>•</span>

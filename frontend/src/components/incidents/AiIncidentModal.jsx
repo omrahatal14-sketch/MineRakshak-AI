@@ -129,16 +129,27 @@ export default function AiIncidentModal({ onClose, onDispatched }) {
     setError(null);
     try {
       const res = await incidentService.dispatchIncident({
-        image: uploadedEvidence || (selectedFile ? { name: selectedFile.name, url: imagePreview, type: "image/jpeg" } : null),
-        aiAnalysis: aiResult,
+        detectedHazard: aiResult.detectedHazard,
+        title: aiResult.detectedHazard,
+        category: aiResult.category,
+        severity: aiResult.severity,
+        riskScore: aiResult.riskScore,
+        description: aiResult.description,
+        recommendations: aiResult.recommendations,
+        deadline: customDeadline || aiResult.calculatedDeadline,
+        customDeadline: customDeadline || aiResult.calculatedDeadline,
+        assignedTo: assignedInspector,
+        assignedToName: inspectorObj ? (inspectorObj.name || inspectorObj.email) : "Field Officer",
+        inspectorId: assignedInspector,
+        inspectorName: inspectorObj ? (inspectorObj.name || inspectorObj.email) : "Field Officer",
+        responsibleParty: responsibleCompany.trim() || aiResult.suggestedResponsibleParty,
+        responsibleCompany: responsibleCompany.trim() || aiResult.suggestedResponsibleParty,
         mineId,
         mineName: mineObj ? mineObj.name : "Kusmunda Coal Mine",
         zone,
-        inspectorId: assignedInspector,
-        inspectorName: inspectorObj ? (inspectorObj.name || inspectorObj.email) : "Field Officer",
-        responsibleCompany: responsibleCompany.trim() || aiResult.suggestedResponsibleParty,
-        customDeadline: customDeadline || aiResult.calculatedDeadline,
         notes: officialNotes.trim(),
+        aiAnalysis: aiResult,
+        image: uploadedEvidence || (selectedFile ? { name: selectedFile.name, url: imagePreview, type: "image/jpeg" } : null),
       });
 
       setDispatchSuccess(res);

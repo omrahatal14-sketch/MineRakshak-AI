@@ -29,6 +29,13 @@ router.get("/", requireAuth, async (req, res, next) => {
       items = items.filter((a) => (a.title || "").toLowerCase().includes(q) || (a.description || "").toLowerCase().includes(q));
     }
 
+    // Sort newest first
+    items.sort((a, b) => {
+      const dateA = new Date(a.createdAt?._seconds ? a.createdAt._seconds * 1000 : a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt?._seconds ? b.createdAt._seconds * 1000 : b.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+
     res.json(items);
   } catch (err) {
     next(err);
@@ -52,9 +59,20 @@ router.post("/", requireAuth, async (req, res, next) => {
     const id = `act_${Date.now()}`;
     const actionData = {
       id,
-      ...req.body,
+      title: req.body.title || req.body.detectedHazard || "Corrective Remediation",
+      description: req.body.description || req.body.recommendations || "Statutory hazard remediation required.",
+      category: req.body.category || "Safety",
+      mineId: req.body.mineId || "KCM-01",
+      mineName: req.body.mineName || "Kusmunda Coal Mine",
+      zone: req.body.zone || "Pit A - Primary Extraction Zone",
+      priority: req.body.priority || "high",
+      targetDate: req.body.targetDate || req.body.deadline || new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0],
+      assignedTo: req.body.assignedTo || req.body.inspectorId || req.user.uid,
+      assignedToName: req.body.assignedToName || req.body.inspectorName || "Field Inspector",
+      responsibleCompany: req.body.responsibleCompany || req.body.responsibleParty || "Plant Maintenance Contractor",
       status: req.body.status || "assigned",
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     await db.collection("correctiveActions").doc(id).set(actionData);
     await logAudit(req.user.uid, "create_corrective_action", "correctiveAction", id, null, actionData, req.user.role);
@@ -64,65 +82,52 @@ router.post("/", requireAuth, async (req, res, next) => {
   }
 });
 
-// PUT /api/corrective-actions/:id — Update action
-router.put("/:id", requireAuth, async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const updateData = { ...req.body, updatedAt: new Date() };
-    await db.collection("correctiveActions").doc(id).set(updateData, { merge: true });
-    await logAudit(req.user.uid, "update_corrective_action", "correctiveAction", id, null, updateData, req.user.role);
-    res.json({ success: true, id, ...updateData });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/corrective-actions/:id/resolve — Resolve action by company/contractor with proof evidence
+// POST /api/corrective-actions/:id/resolve — Submit resolution proof (Field Officer / Contractor)
 router.post("/:id/resolve", requireAuth, async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { resolutionNotes, resolutionEvidence = [] } = req.body;
+    const { notes, evidence = [] } = req.body;
+    const docRef = db.collection("correctiveActions").doc(req.params.id);
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: "Action not found" });
+
     const updateData = {
       status: "resolved",
-      resolutionNotes: resolutionNotes || "Hazard remediation completed on-site.",
-      resolutionEvidence,
-      resolvedByName: req.user.name,
-      resolvedBy: req.user.uid,
+      resolutionNotes: notes,
+      resolutionEvidence: evidence,
       resolvedAt: new Date(),
+      resolvedById: req.user.uid,
+      resolvedByName: req.user.name,
+      updatedAt: new Date(),
     };
-    await db.collection("correctiveActions").doc(id).set(updateData, { merge: true });
 
-    // Notify field inspector that action is ready for physical verification
-    await db.collection("notifications").add({
-      title: `[Ready for Verification] Action Resolved: ${id}`,
-      message: `${req.user.name} submitted resolution evidence for action ${id}. Awaiting inspector sign-off.`,
-      recipientRole: "field_officer",
-      isRead: false,
-      createdAt: new Date(),
-    });
-
-    await logAudit(req.user.uid, "resolve_corrective_action", "correctiveAction", id, null, updateData, req.user.role);
-    res.json({ success: true, message: "Action marked as resolved. Awaiting inspector verification.", id, ...updateData });
+    await docRef.update(updateData);
+    await logAudit(req.user.uid, "resolve_corrective_action", "correctiveAction", req.params.id, null, updateData, req.user.role);
+    res.json({ id: req.params.id, ...doc.data(), ...updateData });
   } catch (err) {
     next(err);
   }
 });
 
-// POST /api/corrective-actions/:id/verify — Verify action
+// POST /api/corrective-actions/:id/verify — Management sign-off and closure (Mine Official / Admin)
 router.post("/:id/verify", requireAuth, async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { verificationNotes, status = "closed" } = req.body;
+    const { status = "closed", notes } = req.body;
+    const docRef = db.collection("correctiveActions").doc(req.params.id);
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: "Action not found" });
+
     const updateData = {
-      status,
-      verificationNotes: verificationNotes || "Action verified and closed by authorized authority.",
-      verifiedByName: req.user.name,
-      verifiedBy: req.user.uid,
+      status: status === "in_progress" ? "in_progress" : "closed",
+      verificationNotes: notes,
       verifiedAt: new Date(),
+      verifiedById: req.user.uid,
+      verifiedByName: req.user.name,
+      updatedAt: new Date(),
     };
-    await db.collection("correctiveActions").doc(id).set(updateData, { merge: true });
-    await logAudit(req.user.uid, "verify_corrective_action", "correctiveAction", id, null, updateData, req.user.role);
-    res.json({ success: true, message: "Action verified and closed.", id, ...updateData });
+
+    await docRef.update(updateData);
+    await logAudit(req.user.uid, "verify_corrective_action", "correctiveAction", req.params.id, null, updateData, req.user.role);
+    res.json({ id: req.params.id, ...doc.data(), ...updateData });
   } catch (err) {
     next(err);
   }
