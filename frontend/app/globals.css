@@ -145,18 +145,7 @@ tbody tr {
   box-shadow: 0 12px 24px rgba(16, 24, 40, 0.09);
 }
 
-#hazards {
-  background-color: #020617;
-  color: #ffffff;
-}
-
-.hazard-glow {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(14, 165, 233, 0.17), transparent 32rem),
-    radial-gradient(circle at 88% 110%, rgba(59, 130, 246, 0.12), transparent 30rem);
-}
 .hazard-card {
-  background-color: rgba(15, 23, 42, 0.75);
   position: relative;
   overflow: hidden;
   transition: transform 220ms ease, background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
@@ -170,27 +159,21 @@ tbody tr {
   transition: background-color 220ms ease;
 }
 .hazard-card:hover {
-  transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.22);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(16, 24, 40, 0.08);
 }
-.hazard-red:hover { border-color: rgba(248, 113, 113, 0.55); }
-.hazard-red:hover::after { background: #f87171; }
-.hazard-amber:hover { border-color: rgba(251, 191, 36, 0.55); }
-.hazard-amber:hover::after { background: #fbbf24; }
-.hazard-blue:hover { border-color: rgba(96, 165, 250, 0.55); }
-.hazard-blue:hover::after { background: #60a5fa; }
-.hazard-violet:hover { border-color: rgba(196, 181, 253, 0.55); }
-.hazard-violet:hover::after { background: #c4b5fd; }
-.hazard-slate:hover { border-color: rgba(203, 213, 225, 0.55); }
-.hazard-slate:hover::after { background: #cbd5e1; }
+.hazard-red:hover { border-color: #fca5a5; }
+.hazard-red:hover::after { background: #ef4444; }
+.hazard-amber:hover { border-color: #fde68a; }
+.hazard-amber:hover::after { background: #f59e0b; }
+.hazard-blue:hover { border-color: #bfdbfe; }
+.hazard-blue:hover::after { background: #3b82f6; }
+.hazard-violet:hover { border-color: #e9d5ff; }
+.hazard-violet:hover::after { background: #8b5cf6; }
+.hazard-slate:hover { border-color: #cbd5e1; }
+.hazard-slate:hover::after { background: #64748b; }
 .hazard-icon { transition: transform 220ms ease; }
 .hazard-card:hover .hazard-icon { transform: scale(1.08) rotate(-4deg); }
-.hazard-icon-red { background: rgba(248, 113, 113, 0.14); color: #fca5a5; }
-.hazard-icon-amber { background: rgba(251, 191, 36, 0.14); color: #fcd34d; }
-.hazard-icon-blue { background: rgba(96, 165, 250, 0.14); color: #93c5fd; }
-.hazard-icon-violet { background: rgba(196, 181, 253, 0.14); color: #c4b5fd; }
-.hazard-icon-slate { background: rgba(203, 213, 225, 0.14); color: #e2e8f0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

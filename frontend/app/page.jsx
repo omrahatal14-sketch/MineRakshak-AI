@@ -19,6 +19,39 @@ const criticalHazards = [
   { title: "Mechanical & haulage accidents", label: "Operational danger", icon: Truck, tone: "slate", summary: "Heavy equipment in confined, low-visibility spaces can derail, crush, or entrap personnel.", risks: ["Conveyor and car failures", "Equipment entrapment"], control: "Inspect guarding, braking, routes, and isolation procedures." },
 ];
 
+const hazardToneStyles = {
+  red: {
+    iconBg: "bg-red-100 text-red-700",
+    badge: "border-red-200 bg-red-50 text-red-700",
+    controlBg: "bg-red-50/70 border-red-100 text-slate-800",
+    controlIcon: "text-red-600",
+  },
+  amber: {
+    iconBg: "bg-amber-100 text-amber-700",
+    badge: "border-amber-200 bg-amber-50 text-amber-700",
+    controlBg: "bg-amber-50/70 border-amber-100 text-slate-800",
+    controlIcon: "text-amber-600",
+  },
+  blue: {
+    iconBg: "bg-blue-100 text-blue-700",
+    badge: "border-blue-200 bg-blue-50 text-blue-700",
+    controlBg: "bg-blue-50/70 border-blue-100 text-slate-800",
+    controlIcon: "text-blue-600",
+  },
+  violet: {
+    iconBg: "bg-purple-100 text-purple-700",
+    badge: "border-purple-200 bg-purple-50 text-purple-700",
+    controlBg: "bg-purple-50/70 border-purple-100 text-slate-800",
+    controlIcon: "text-purple-600",
+  },
+  slate: {
+    iconBg: "bg-slate-100 text-slate-700",
+    badge: "border-slate-200 bg-slate-100 text-slate-700",
+    controlBg: "bg-slate-100/70 border-slate-200 text-slate-800",
+    controlIcon: "text-slate-600",
+  },
+};
+
 export default function LandingPage() {
   const { profile, loginAsDemo } = useAuth();
   const router = useRouter();
@@ -160,28 +193,81 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="hazards" className="relative overflow-hidden border-y border-slate-800 bg-slate-950 px-4 py-16 text-white sm:px-6">
-        <div className="hazard-glow absolute inset-0 pointer-events-none" />
-        <div className="relative mx-auto max-w-6xl">
+      {/* 2.5 Critical Incident Intelligence Section */}
+      <section id="hazards" className="px-4 sm:px-6 py-16 bg-surface border-y border-border">
+        <div className="mx-auto max-w-6xl">
           <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-sky-200"><Activity className="h-3.5 w-3.5" /> Critical incident intelligence</div>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Recognize the incidents that demand the fastest response.</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300">Use these risk profiles to focus inspections, telemetry, and corrective actions on the conditions that can escalate without warning.</p>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
+                <Activity className="h-3.5 w-3.5" /> Critical incident intelligence
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+                Recognize the incidents that demand the fastest response.
+              </h2>
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate">
+                Use these risk profiles to focus inspections, telemetry, and corrective actions on the conditions that can escalate without warning.
+              </p>
             </div>
-            <Link href="/login" className="group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-sky-200 transition hover:text-white">Open safety workspace <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" /></Link>
+            <Link
+              href="/login"
+              className="group inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-dark transition"
+            >
+              <span>Open safety workspace</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
           </div>
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 animate-stagger">
-            {criticalHazards.map(({ title, label, icon: Icon, tone, summary, risks, control }) => (
-              <article key={title} className={`hazard-card hazard-${tone} group rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm`}>
-                <div className="flex items-start justify-between gap-3"><div className={`hazard-icon hazard-icon-${tone} flex h-11 w-11 items-center justify-center rounded-xl`}><Icon className="h-5 w-5" strokeWidth={2} /></div><span className="rounded-full border border-white/10 bg-black/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-300">{label}</span></div>
-                <h3 className="mt-5 text-base font-bold text-white">{title}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-slate-300">{summary}</p>
-                <div className="mt-4 space-y-2 border-t border-white/10 pt-4">{risks.map((risk) => <div key={risk} className="flex items-center gap-2 text-xs font-medium text-slate-200"><CircleAlert className="h-3.5 w-3.5 shrink-0 text-slate-400" />{risk}</div>)}</div>
-                <div className="mt-4 flex gap-2 rounded-lg bg-black/15 p-2.5 text-[11px] leading-relaxed text-sky-100"><Eye className="mt-0.5 h-3.5 w-3.5 shrink-0" /><span>{control}</span></div>
-              </article>
-            ))}
-            <Link href="/map" className="hazard-card group flex min-h-[280px] flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.03] p-5 transition hover:border-sky-300 hover:bg-white/[0.08]"><div><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-400/10 text-sky-200"><MapPin className="h-5 w-5" /></div><h3 className="mt-5 text-base font-bold">Map hazards to the workface</h3><p className="mt-2 text-xs leading-relaxed text-slate-300">Pair field observations with location, inspection history, and live risk context in the GIS workspace.</p></div><span className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-200">View GIS mine map <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></Link>
+            {criticalHazards.map(({ title, label, icon: Icon, tone, summary, risks, control }) => {
+              const styles = hazardToneStyles[tone] || hazardToneStyles.slate;
+              return (
+                <article
+                  key={title}
+                  className={`hazard-card hazard-${tone} group rounded-2xl border border-border bg-canvas p-5 shadow-xs transition hover:shadow-md hover:bg-surface`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`hazard-icon flex h-11 w-11 items-center justify-center rounded-xl ${styles.iconBg}`}>
+                      <Icon className="h-5 w-5" strokeWidth={2} />
+                    </div>
+                    <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${styles.badge}`}>
+                      {label}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-sm font-bold text-ink">{title}</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-slate">{summary}</p>
+                  <div className="mt-4 space-y-2 border-t border-border pt-3.5">
+                    {risks.map((risk) => (
+                      <div key={risk} className="flex items-center gap-2 text-xs font-medium text-slate">
+                        <CircleAlert className="h-3.5 w-3.5 shrink-0 text-slate/70" />
+                        {risk}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={`mt-4 flex gap-2 rounded-xl p-2.5 text-[11px] leading-relaxed border ${styles.controlBg}`}>
+                    <Eye className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${styles.controlIcon}`} />
+                    <span>{control}</span>
+                  </div>
+                </article>
+              );
+            })}
+
+            <Link
+              href="/map"
+              className="hazard-card group flex min-h-[280px] flex-col justify-between rounded-2xl border border-dashed border-primary/30 bg-primary-light/40 p-5 transition hover:border-primary hover:bg-primary-light/70 shadow-xs hover:shadow-md"
+            >
+              <div>
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-base font-bold text-ink">Map hazards to the workface</h3>
+                <p className="mt-2 text-xs leading-relaxed text-slate">
+                  Pair field observations with location, inspection history, and live risk context in the GIS workspace.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:text-primary-dark">
+                View GIS mine map <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>
