@@ -12,7 +12,7 @@ export const env = {
   port: process.env.PORT || 4000,
   nodeEnv: process.env.NODE_ENV || "development",
   aiServiceUrl: process.env.AI_SERVICE_URL || "http://localhost:8000",
-  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  corsOrigin: process.env.CORS_ORIGIN || "*",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "minerakshak-ai",
   firebaseServiceAccountPath: process.env.FIREBASE_SERVICE_ACCOUNT_PATH || path.resolve(__dirname, "../../../firebase/service-account.json"),
 };

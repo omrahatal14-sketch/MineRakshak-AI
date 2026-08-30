@@ -1,9 +1,16 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext.jsx";
-import CreateInspectionModal from "../../pages/inspections/CreateInspectionModal.jsx";
+import CreateInspectionModal from "../modals/CreateInspectionModal.jsx";
 import AiIncidentModal from "../incidents/AiIncidentModal.jsx";
 import { notificationService } from "../../services/corporateService.js";
+import {
+  LayoutDashboard, ClipboardCheck, Search as SearchIcon, ShieldCheck, MapPin,
+  FileText, BarChart3, ScrollText, Bell, Menu, X,
+} from "lucide-react";
 
 const ROLE_LABELS = {
   field_officer: "Field Officer",
@@ -12,11 +19,29 @@ const ROLE_LABELS = {
   admin: "System Admin",
 };
 
+function NavItem({ href, icon: Icon, label, active, collapsed }) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+        active
+          ? "bg-primary text-white shadow-sm"
+          : "text-slate hover:bg-canvas hover:text-ink"
+      }`}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      {!collapsed && <span>{label}</span>}
+    </Link>
+  );
+}
+
 export default function AppShell({ title, children, onInspectionCreated }) {
-  const { profile, logout } = useAuth();
-  const location = useLocation();
+  const { profile, logout, loading } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAiIncidentModal, setShowAiIncidentModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Notifications dropdown state
   const [notifications, setNotifications] = useState([]);
@@ -41,6 +66,11 @@ export default function AppShell({ title, children, onInspectionCreated }) {
     } catch {}
   };
 
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
   const homePath =
     profile?.role === "field_officer"
       ? "/field-officer"
@@ -53,74 +83,55 @@ export default function AppShell({ title, children, onInspectionCreated }) {
   const isMineOfficial = profile?.role === "mine_official";
   const canCreateInspection = ["admin", "mine_official"].includes(profile?.role);
 
+  // Navigation items per role
+  const navItems = [
+    { href: homePath, icon: LayoutDashboard, label: "Dashboard", roles: ["field_officer", "mine_official", "corporate", "admin"] },
+    { href: "/inspections", icon: SearchIcon, label: "Inspections", roles: ["field_officer", "mine_official", "corporate", "admin"] },
+    { href: "/corrective-actions", icon: ShieldCheck, label: "Corrective Actions", roles: ["field_officer", "mine_official", "corporate", "admin"] },
+    { href: "/compliance", icon: ClipboardCheck, label: "Compliance", roles: ["field_officer", "mine_official", "corporate", "admin"] },
+    { href: "/map", icon: MapPin, label: "GIS Map", roles: ["mine_official", "corporate", "admin"] },
+    { href: "/documents", icon: FileText, label: "Documents / OCR", roles: ["field_officer", "mine_official", "corporate", "admin"] },
+    { href: "/reports", icon: BarChart3, label: "Reports", roles: ["mine_official", "corporate", "admin"] },
+    { href: "/audit-trail", icon: ScrollText, label: "Audit Trail", roles: ["corporate", "admin"] },
+  ].filter((item) => item.roles.includes(profile?.role));
+
   return (
     <div className="min-h-screen bg-canvas">
-      {/* Top Navigation Header */}
+      {/* Top Header */}
       <header className="sticky top-0 z-30 border-b border-border bg-surface shadow-xs">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3">
-          {/* Logo & Brand */}
-          <div className="flex items-center gap-5">
-            <Link to={homePath} className="flex items-center gap-2.5 group">
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Left: Hamburger + Brand */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden rounded p-1.5 text-slate hover:bg-canvas hover:text-ink transition"
+            >
+              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+
+            <Link href={homePath} className="flex items-center gap-2.5 group">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white shadow-sm transition group-hover:bg-primary-dark">
                 MR
               </div>
-              <div>
+              <div className="hidden sm:block">
                 <p className="text-sm font-bold leading-tight text-ink">MineRakshak AI</p>
                 <p className="text-[11px] font-medium text-slate">
                   {ROLE_LABELS[profile?.role] || "Platform User"}
-                  {profile?.mineId ? ` • ${profile.mineId}` : ""}
                 </p>
               </div>
             </Link>
-
-            {/* Nav Tabs */}
-            <nav className="hidden md:flex items-center gap-1 ml-4 border-l border-border pl-4">
-              <Link
-                to={homePath}
-                className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
-                  location.pathname === homePath
-                    ? "bg-primary-light text-primary"
-                    : "text-slate hover:bg-canvas hover:text-ink"
-                }`}
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/inspections"
-                className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
-                  location.pathname.startsWith("/inspections")
-                    ? "bg-primary-light text-primary"
-                    : "text-slate hover:bg-canvas hover:text-ink"
-                }`}
-              >
-                {profile?.role === "field_officer" ? "My Inspections" : "Inspections"}
-              </Link>
-              <Link
-                to="/corrective-actions"
-                className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
-                  location.pathname.startsWith("/corrective-actions")
-                    ? "bg-primary-light text-primary"
-                    : "text-slate hover:bg-canvas hover:text-ink"
-                }`}
-              >
-                Corrective Actions
-              </Link>
-            </nav>
           </div>
 
-          {/* Actions, Notifications & Profile */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Right: Actions + Notifications + Profile */}
+          <div className="flex items-center gap-2.5">
             {isMineOfficial && (
               <button
                 type="button"
                 onClick={() => setShowAiIncidentModal(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary-dark transition"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="hidden sm:inline">AI Incident Vision</span>
+                AI Incident Vision
               </button>
             )}
 
@@ -134,58 +145,59 @@ export default function AppShell({ title, children, onInspectionCreated }) {
               </button>
             )}
 
-            {/* Notifications Dropdown */}
+            {/* Notifications */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowNotifs(!showNotifs)}
-                className="relative rounded p-1.5 text-slate hover:bg-canvas hover:text-ink transition"
+                className="relative rounded-lg p-2 text-slate hover:bg-canvas hover:text-ink transition"
                 title="Notifications"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
+                <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 font-mono text-[9px] font-bold text-white shadow-xs">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-600 font-mono text-[9px] font-bold text-white shadow-xs animate-pulse">
                     {unreadCount}
                   </span>
                 )}
               </button>
 
               {showNotifs && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-lg border border-border bg-surface shadow-xl z-50 p-3">
-                  <div className="flex items-center justify-between border-b border-border pb-2 mb-2">
-                    <span className="text-xs font-bold text-ink">Notifications ({unreadCount} new)</span>
-                    {unreadCount > 0 && (
-                      <button
-                        onClick={handleMarkAllRead}
-                        className="text-[11px] font-semibold text-primary hover:underline"
-                      >
-                        Mark all as read
-                      </button>
-                    )}
-                  </div>
-                  <div className="max-h-72 overflow-y-auto space-y-2 text-xs">
-                    {notifications.length === 0 ? (
-                      <p className="text-center py-4 text-slate text-[11px]">No notifications right now.</p>
-                    ) : (
-                      notifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className={`rounded p-2.5 transition border ${
-                            n.isRead ? "bg-canvas border-transparent text-slate" : "bg-blue-50/50 border-blue-100 text-ink"
-                          }`}
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowNotifs(false)} />
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl border border-border bg-surface shadow-2xl z-50 p-3 animate-slideDown">
+                    <div className="flex items-center justify-between border-b border-border pb-2 mb-2">
+                      <span className="text-xs font-bold text-ink">Notifications ({unreadCount} new)</span>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={handleMarkAllRead}
+                          className="text-[11px] font-semibold text-primary hover:underline"
                         >
-                          <p className="font-semibold text-xs leading-tight">{n.title}</p>
-                          <p className="text-[11px] mt-0.5 line-clamp-2">{n.message}</p>
-                          <span className="mt-1 block font-mono text-[9px] text-slate">
-                            {n.createdAt ? new Date(n.createdAt._seconds ? n.createdAt._seconds * 1000 : n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now"}
-                          </span>
-                        </div>
-                      ))
-                    )}
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-72 overflow-y-auto space-y-2 text-xs">
+                      {notifications.length === 0 ? (
+                        <p className="text-center py-4 text-slate text-[11px]">No notifications right now.</p>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className={`rounded-lg p-2.5 transition border ${
+                              n.isRead ? "bg-canvas border-transparent text-slate" : "bg-blue-50/50 border-blue-100 text-ink"
+                            }`}
+                          >
+                            <p className="font-semibold text-xs leading-tight">{n.title}</p>
+                            <p className="text-[11px] mt-0.5 line-clamp-2">{n.message}</p>
+                            <span className="mt-1 block font-mono text-[9px] text-slate">
+                              {n.createdAt ? new Date(n.createdAt._seconds ? n.createdAt._seconds * 1000 : n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now"}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
@@ -196,7 +208,7 @@ export default function AppShell({ title, children, onInspectionCreated }) {
                 <p className="mt-0.5 text-[10px] text-slate">{profile?.email || ""}</p>
               </div>
               <button
-                onClick={logout}
+                onClick={handleLogout}
                 className="rounded border border-border px-2.5 py-1 text-xs font-medium text-slate hover:bg-canvas hover:text-ink transition"
                 title="Sign out"
               >
@@ -207,24 +219,64 @@ export default function AppShell({ title, children, onInspectionCreated }) {
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6">
-        {title && (
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-ink">{title}</h1>
-            {isMineOfficial && (
-              <button
-                type="button"
-                onClick={() => setShowAiIncidentModal(true)}
-                className="sm:hidden inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs"
-              >
-                Capture Incident (AI Vision)
-              </button>
-            )}
+      <div className="flex">
+        {/* Sidebar Navigation */}
+        <aside className={`${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 fixed lg:sticky top-[61px] left-0 z-20 h-[calc(100vh-61px)] w-56 border-r border-border bg-surface shadow-lg lg:shadow-none transition-transform duration-300`}>
+          <nav className="p-3 space-y-1">
+            {navItems.map((item) => (
+              <NavItem
+                key={item.href}
+                href={item.href}
+                icon={item.icon}
+                label={item.label}
+                active={
+                  item.href === homePath
+                    ? pathname === homePath
+                    : pathname.startsWith(item.href)
+                }
+              />
+            ))}
+          </nav>
+
+          {/* Sidebar Footer */}
+          <div className="absolute bottom-4 left-3 right-3">
+            <div className="rounded-lg bg-canvas border border-border p-3">
+              <p className="text-[10px] font-semibold text-slate uppercase tracking-wider">Platform</p>
+              <p className="text-[11px] font-bold text-ink mt-0.5">MineRakshak AI</p>
+              <p className="text-[10px] text-slate mt-0.5">Smart Compliance Platform</p>
+            </div>
           </div>
+        </aside>
+
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-10 bg-black/20 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
-        {children}
-      </main>
+
+        {/* Main Content Area */}
+        <main className="flex-1 min-w-0 px-4 sm:px-6 py-6 max-w-6xl mx-auto w-full">
+          {title && (
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <h1 className="text-xl font-bold tracking-tight text-ink">{title}</h1>
+              {isMineOfficial && (
+                <button
+                  type="button"
+                  onClick={() => setShowAiIncidentModal(true)}
+                  className="sm:hidden inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs"
+                >
+                  Capture Incident (AI Vision)
+                </button>
+              )}
+            </div>
+          )}
+          {children}
+        </main>
+      </div>
 
       {/* Schedule Inspection Modal */}
       {showCreateModal && (

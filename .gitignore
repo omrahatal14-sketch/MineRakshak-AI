@@ -8,12 +8,16 @@ pnpm-lock.yaml
 dist/
 build/
 .vite/
+.next/
 
 # Environment and Secrets
 .env
 .env.local
 .env.*.local
 *.env
+firebase/*.json
+!firebase/firebase.json
+!firebase/firestore.indexes.json
 firebase/service-account.json
 service-account.json
 

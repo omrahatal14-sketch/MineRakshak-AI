@@ -3,7 +3,10 @@ from app.risk_scoring import score_mine_risk
 
 
 def prioritize_inspections() -> list[dict]:
-    mines = [{"id": m.id, **m.to_dict()} for m in db.collection("mines").stream()]
+    try:
+        mines = [{"id": m.id, **m.to_dict()} for m in db.collection("mines").stream()]
+    except Exception:
+        mines = []
     ranked = []
     for mine in mines:
         risk = score_mine_risk(mine["id"])

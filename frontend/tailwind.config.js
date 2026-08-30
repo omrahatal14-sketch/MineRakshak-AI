@@ -1,26 +1,29 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx}"],
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
-        canvas: "#F5F7FA",     // app background
-        surface: "#FFFFFF",   // cards/panels
+        canvas: "#F5F7FA",
+        surface: "#FFFFFF",
         border: "#E4E7EC",
-        ink: "#101828",       // primary text
-        slate: "#475467",     // secondary text
+        ink: "#101828",
+        slate: "#475467",
         primary: {
-          DEFAULT: "#1D4E89", // deep steel blue — governance/authority, not a bright SaaS blue
+          DEFAULT: "#1D4E89",
           dark: "#163C69",
-          light: "#EAF1F8",   // tinted backgrounds for selected nav / soft highlights
+          light: "#EAF1F8",
         },
         status: {
-          open: "#475467",       // neutral slate
-          pending: "#B7791F",    // ochre
-          overdue: "#B42318",    // red
-          inProgress: "#2F6FB0", // blue
-          verified: "#1D4E89",   // primary blue
-          closed: "#1B7F4C",     // green
+          open: "#475467",
+          pending: "#B7791F",
+          overdue: "#B42318",
+          inProgress: "#2F6FB0",
+          verified: "#1D4E89",
+          closed: "#1B7F4C",
         },
       },
       fontFamily: {

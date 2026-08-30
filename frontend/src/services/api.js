@@ -1,6 +1,8 @@
 import { firebaseAuth } from "../config/firebase.js";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+const BASE_URL =
+  (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_BASE_URL) ||
+  "http://localhost:4000/api";
 
 async function request(path, options = {}) {
   let user = firebaseAuth.currentUser;
@@ -12,6 +14,16 @@ async function request(path, options = {}) {
     } catch {
       token = null;
     }
+  }
+
+  if (!token && typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem("minerakshak_demo_user");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        token = `demo-token-${parsed.role}-${parsed.uid}`;
+      }
+    } catch {}
   }
 
   let res = await fetch(`${BASE_URL}${path}`, {

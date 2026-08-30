@@ -1,1 +1,1 @@
-"""MineRakshak AI Service Package"""
+# MineRakshak AI Service Package

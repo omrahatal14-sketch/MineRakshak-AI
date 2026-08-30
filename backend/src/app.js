@@ -21,17 +21,13 @@ import auditLogRoutes from "./modules/auditLogs/routes.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: true, // Automatically accepts requests from Vercel, localhost, and custom domains
-    credentials: true,
-  })
-);
+app.use(cors({ origin: env.corsOrigin }));
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(morgan(env.nodeEnv === "development" ? "dev" : "combined"));
 
 app.get("/health", (req, res) => res.json({ status: "ok", service: "minerakshak-backend" }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", service: "minerakshak-backend" }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -51,8 +47,15 @@ app.use("/api/audit-logs", auditLogRoutes);
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 app.use(errorHandler);
 
-app.listen(env.port, () => {
+import { seedDatabase } from "./scripts/seed.js";
+
+app.listen(env.port, async () => {
   console.log(`MineRakshak backend listening on port ${env.port}`);
+  try {
+    await seedDatabase();
+  } catch (err) {
+    console.warn("Auto-seed notice:", err.message);
+  }
 });
 
 export default app;

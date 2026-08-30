@@ -1,7 +1,5 @@
 {
   "projects": {
-    "smart": "minerakshak-ai"
-  },
-  "targets": {},
-  "etags": {}
+    "default": "minerakshak-ai"
+  }
 }

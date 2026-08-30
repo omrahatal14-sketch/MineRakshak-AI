@@ -1,10 +1,5 @@
 rules_version = '2';
 
-// Primary access control lives in the Express backend (which uses the privileged Admin SDK
-// and bypasses these rules entirely). These rules are defense-in-depth for any direct
-// client reads/listeners the frontend adds later (e.g. a live notification badge), so a
-// compromised or buggy frontend still can't read/write outside a user's role.
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -62,7 +57,6 @@ service cloud.firestore {
     match /correctiveActions/{actionId} {
       allow read: if isSignedIn();
       allow create: if isMineOfficialOrAbove();
-      // assignee may update progress; verification/closure restricted to mine official+
       allow update: if isMineOfficialOrAbove()
                     || (isSignedIn() && resource.data.assignedTo == request.auth.uid);
       allow delete: if false;
@@ -76,11 +70,10 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
       allow read, update: if isSignedIn() && resource.data.userId == request.auth.uid;
-      allow create: if false;  // backend-only (Admin SDK)
+      allow create: if false;
       allow delete: if false;
     }
 
-    // Written only by the backend via the Admin SDK — never directly by clients.
     match /auditLogs/{logId} {
       allow read: if isMineOfficialOrAbove();
       allow write: if false;

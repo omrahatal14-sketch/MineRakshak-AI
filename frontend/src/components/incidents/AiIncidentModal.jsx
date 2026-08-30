@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { uploadEvidenceFile } from "../../services/storageService.js";
@@ -278,7 +280,7 @@ export default function AiIncidentModal({ onClose, onDispatched }) {
               </div>
             </div>
 
-            {/* Right Column: AI Analysis & Multi-Party Dispatch */}
+            {/* Right Column: AI Diagnosis & Multi-Party Dispatch */}
             <div className="space-y-4">
               <label className="block text-xs font-bold uppercase tracking-wider text-slate">
                 2. AI Diagnosis & Auto-Deadline

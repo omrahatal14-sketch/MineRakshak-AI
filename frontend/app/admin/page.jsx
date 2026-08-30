@@ -1,8 +1,10 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import AppShell from "../../components/layout/AppShell.jsx";
-import { adminService } from "../../services/adminService.js";
-import UserModal from "./UserModal.jsx";
-import MineModal from "./MineModal.jsx";
+import AppShell from "../../src/components/layout/AppShell.jsx";
+import { adminService } from "../../src/services/adminService.js";
+import UserModal from "../../src/components/modals/UserModal.jsx";
+import MineModal from "../../src/components/modals/MineModal.jsx";
 
 const ROLE_DISPLAY = {
   field_officer: { label: "Field Officer", badge: "bg-blue-50 text-blue-700 border-blue-200" },
@@ -11,7 +13,7 @@ const ROLE_DISPLAY = {
   admin: { label: "Administrator", badge: "bg-red-50 text-red-700 border-red-200" },
 };
 
-export default function AdminDashboard() {
+export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("users"); // "users" | "mines" | "audit"
   const [users, setUsers] = useState([]);
   const [mines, setMines] = useState([]);

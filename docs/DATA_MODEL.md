@@ -28,12 +28,4 @@ and the AI service's reads stay simple. Relationships are plain ID references (`
   a matching composite index — see `firestore.indexes.json`.
 - **Role/RBAC**: the role is stored twice on purpose — as a **custom claim** on the Firebase
   Auth token (source of truth, set server-side, used by `firestore.rules` and backend
-  middleware) and mirrored into the `users` document (for the admin dashboard to list/search
-  users, since Auth users aren't directly queryable).
-- **Audit logs**: written only by the backend using the Admin SDK (privileged, bypasses
-  rules); `firestore.rules` denies direct client writes to `auditLogs` and `riskScores` so
-  neither can be forged or overwritten from the frontend.
-- **AI service**: reads Firestore directly via `firebase-admin` (Python) rather than going
-  through the Node backend for bulk historical reads, and writes its output to `riskScores`;
-  the Node backend calls it over HTTP to trigger a (re)score rather than proxying data back
-  and forth.
+  `auth.js` middleware) and mirrored into the `users` Firestore document for queries.

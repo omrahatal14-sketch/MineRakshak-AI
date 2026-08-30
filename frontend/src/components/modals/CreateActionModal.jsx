@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { correctiveActionService } from "../../services/correctiveActionService.js";

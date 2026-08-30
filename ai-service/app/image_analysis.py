@@ -6,7 +6,6 @@ evaluates risk severity, calculates AI risk scores, and sets statutory remediati
 """
 
 from datetime import datetime, timezone, timedelta
-import re
 
 HAZARD_PROFILES = [
     {
@@ -17,7 +16,7 @@ HAZARD_PROFILES = [
         "confidence": 0.96,
         "description": "Computer vision analysis detected mechanical conveyor drive assembly operating without statutory wire mesh protection. Emergency trip wire disconnected. High probability of worker entanglement and kinetic pinch hazard.",
         "recommendations": "1. Immediate emergency stop lockout (LOTO). 2. Install certified DGMS-compliant mechanical mesh barrier. 3. Reinstall and test pull-cord trip switch mechanism.",
-        "suggestedDeadlineDays": 1, # 24 Hours
+        "suggestedDeadlineDays": 1,  # 24 Hours
         "riskScore": 88.0,
         "riskLevel": "high",
         "suggestedResponsibleParty": "Conveyor Engineering & Mechanical Contractor",
@@ -30,7 +29,7 @@ HAZARD_PROFILES = [
         "confidence": 0.93,
         "description": "Visible longitudinal tension fracture along the highwall crest with displacement exceeding 25mm. Potential slope failure condition under operational vibration.",
         "recommendations": "1. Immediately cordon off pit floor below Sector 3 highwall. 2. Deploy continuous radar/extensometer monitoring. 3. Initiate mechanical bench de-stressing and trim blasting.",
-        "suggestedDeadlineDays": 1, # 24 Hours
+        "suggestedDeadlineDays": 1,  # 24 Hours
         "riskScore": 92.5,
         "riskLevel": "high",
         "suggestedResponsibleParty": "Geotechnical Survey & Pit Stabilization Team",
@@ -43,7 +42,7 @@ HAZARD_PROFILES = [
         "confidence": 0.91,
         "description": "Sprinkler manifold nozzle array blocked with sediment, causing localized fugitive PM10 dust plume exceeding ambient air quality limits during heavy dumper traffic.",
         "recommendations": "1. Flush water distribution manifold and replace clogged spray tips. 2. Deploy auxiliary mobile water tankers on haul route sector B. 3. Verify pressure gauge at 4.5 bar.",
-        "suggestedDeadlineDays": 5, # 5 Days
+        "suggestedDeadlineDays": 5,  # 5 Days
         "riskScore": 48.0,
         "riskLevel": "medium",
         "suggestedResponsibleParty": "Environmental Control & Dust Mitigation Services",
@@ -56,7 +55,7 @@ HAZARD_PROFILES = [
         "confidence": 0.94,
         "description": "High-pressure hydraulic hose abrasion and active fluid leakage detected on 100T dumper chassis. Potential fire ignition risk on hot exhaust manifold and loss of steering pressure.",
         "recommendations": "1. Remove equipment from production cycle immediately. 2. Replace braided high-pressure hydraulic line. 3. Clean engine bay and perform pressure drop test.",
-        "suggestedDeadlineDays": 2, # 48 Hours
+        "suggestedDeadlineDays": 2,  # 48 Hours
         "riskScore": 76.0,
         "riskLevel": "high",
         "suggestedResponsibleParty": "Heavy Earthmoving Machinery (HEMM) OEM Contractor",
@@ -69,7 +68,7 @@ HAZARD_PROFILES = [
         "confidence": 0.89,
         "description": "Safety embankment/berm measured below statutory height (less than largest dumper wheel diameter / 1.5m) along steep gradient turn.",
         "recommendations": "1. Restrict travel speed to 15 km/h on curve. 2. Deploy motor grader and dozer to raise compacted stone berm to minimum 1.8m height. 3. Install reflective retro-delineator markers.",
-        "suggestedDeadlineDays": 3, # 72 Hours
+        "suggestedDeadlineDays": 3,  # 72 Hours
         "riskScore": 72.0,
         "riskLevel": "high",
         "suggestedResponsibleParty": "Civil Haul Road Maintenance Division",

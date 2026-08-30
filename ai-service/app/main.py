@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 
@@ -8,6 +9,14 @@ from app.prioritization import prioritize_inspections
 from app.image_analysis import analyze_hazard_image
 
 app = FastAPI(title="MineRakshak AI Service", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class MineRequest(BaseModel):
