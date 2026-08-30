@@ -6,6 +6,7 @@ import { adminService } from "../../services/adminService.js";
 const ROLES = [
   { id: "field_officer", label: "Field Officer (Inspector)" },
   { id: "mine_official", label: "Mine Official (Compliance Manager)" },
+  { id: "contractor", label: "Contractor Company (Repair Vendor)" },
   { id: "corporate", label: "Corporate Management" },
   { id: "admin", label: "System Administrator" },
 ];
@@ -27,7 +28,7 @@ export default function UserModal({ user, onClose, onSaved }) {
       try {
         const data = await adminService.getMines();
         setMines(data || []);
-        if (!user?.mineId && data?.length > 0 && ["field_officer", "mine_official"].includes(role)) {
+        if (!user?.mineId && data?.length > 0 && ["field_officer", "mine_official", "contractor"].includes(role)) {
           setMineId(data[0].id);
         }
       } catch {}
@@ -144,7 +145,7 @@ export default function UserModal({ user, onClose, onSaved }) {
               </select>
             </div>
 
-            {["field_officer", "mine_official"].includes(role) && (
+            {["field_officer", "mine_official", "contractor"].includes(role) && (
               <div>
                 <label className="mb-1 block font-semibold text-slate">Assigned Mine</label>
                 <select
