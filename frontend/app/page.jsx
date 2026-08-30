@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../src/context/AuthContext.jsx";
 import {
   ShieldAlert, Camera, MapPin, FileText, CheckCircle2, ClipboardCheck,
-  TrendingUp, Clock, Users, ArrowRight, ShieldCheck,
+  TrendingUp, Clock, Users, ArrowRight, ShieldCheck, Wrench,
   Building2, HardHat, Compass, Sparkles, LogIn, Flame,
   Mountain, Waves, Wind, Truck, CircleAlert, Eye, ChevronRight, Activity
 } from "lucide-react";
@@ -30,6 +30,8 @@ export default function LandingPage() {
         ? "/field-officer"
         : user.role === "mine_official"
         ? "/mine-official"
+        : user.role === "contractor"
+        ? "/contractor"
         : user.role === "corporate"
         ? "/corporate"
         : "/admin";
@@ -66,6 +68,8 @@ export default function LandingPage() {
                     ? "/field-officer"
                     : profile.role === "mine_official"
                     ? "/mine-official"
+                    : profile.role === "contractor"
+                    ? "/contractor"
                     : profile.role === "corporate"
                     ? "/corporate"
                     : "/admin"
@@ -182,7 +186,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. 4 Stakeholder Personas Section */}
+      {/* 3. 5 Stakeholder Personas Section */}
       <section id="roles" className="px-4 sm:px-6 py-16 bg-surface border-y border-border">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-12">
@@ -191,11 +195,11 @@ export default function LandingPage() {
               Integrated Multi-Stakeholder Governance
             </h2>
             <p className="text-xs text-slate mt-2">
-              Four tailored dashboards providing real-time visibility, automated workflows, and data-driven insights.
+              Five tailored dashboards providing real-time visibility, automated workflows, and data-driven insights.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {/* Persona 1: Mine Official */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-purple-300 hover:shadow-md transition group">
               <div>
@@ -236,15 +240,35 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Persona 3: Corporate HQ */}
+            {/* Persona 3: Contractor Company */}
+            <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-orange-300 hover:shadow-md transition group">
+              <div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-700 mb-3">
+                  <Wrench className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-sm text-ink">Contractor Company (Repair)</h3>
+                <p className="text-xs text-slate mt-1.5 leading-relaxed">
+                  Receives AI-dispatched repair work orders with risk scores, statutory deadlines with countdown timers, and uploads repair completion proofs.
+                </p>
+              </div>
+              <button
+                onClick={() => handleQuickLaunch("contractor")}
+                className="mt-5 w-full rounded-lg bg-orange-50 text-orange-700 font-bold text-xs py-2 hover:bg-orange-100 transition flex items-center justify-center gap-1"
+              >
+                <span>Launch Contractor</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Persona 4: Corporate HQ */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition group">
               <div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 mb-3">
                   <Building2 className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-sm text-ink">Corporate (Company)</h3>
+                <h3 className="font-bold text-sm text-ink">Corporate Management (HQ)</h3>
                 <p className="text-xs text-slate mt-1.5 leading-relaxed">
-                  Monitors multi-mine AI inspection rankings, fulfills company CAPA rectifications against statutory deadlines, and views GIS maps.
+                  Monitors multi-mine AI inspection rankings, tracks contractor SLA deadlines, and exports statutory compliance reports.
                 </p>
               </div>
               <button
@@ -256,7 +280,7 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* Persona 4: System Admin */}
+            {/* Persona 5: System Admin */}
             <div className="rounded-2xl border border-border bg-canvas p-5 flex flex-col justify-between hover:border-red-300 hover:shadow-md transition group">
               <div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700 mb-3">
